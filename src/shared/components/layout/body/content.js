@@ -41,6 +41,7 @@ import {
     Container
 } from "@mui/material"
 
+import MenuIcon from '@mui/icons-material/Menu';
 import MuiAlert from '@mui/material/Alert';
 
 import {resetUserData} from "../../../../modules/auth/store/actionCreators"
@@ -53,6 +54,7 @@ function Content (props) {
     const location = useLocation();
     const navigate  = useNavigate();
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const [anchorElResponse, setAnchorElResponse] = React.useState(null);
     
     const alertOpen = useSelector(state => state.alertMessage.open)
 	const alertType = useSelector(state => state.alertMessage.type)
@@ -187,12 +189,46 @@ function Content (props) {
                                         </div>
                                     ) : (
                                         <div style={{float: "right"}}>
-                                            <Link href="/login" underline="none" color="#101840" sx={{fontWeight: 500,fontFamily: "inherit", marginInline: 2}}>
+                                            <IconButton 
+                                                sx={{ display: { xs: 'flex', sm: 'none' } }}
+                                                onClick={()=>{setAnchorElResponse(true)}}
+                                            >
+                                                <MenuIcon/>
+                                            </IconButton>
+                                            <Menu
+                                                sx={{ mt: '45px', display: {sm: 'none'} }}
+                                                id="menu-appbar"
+                                                anchorEl={anchorElResponse}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                keepMounted
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                open={Boolean(anchorElResponse)}
+                                                onClose={()=>{setAnchorElResponse(null)}}
+                                                >
+                                                <MenuItem key={"login"} >
+                                                    <Link href="/login" underline="none" color="#101840" sx={{ display: { xs: 'inline', sm: 'none' }, fontWeight: 500,fontFamily: "inherit", marginInline: 2}}>
+                                                        {'Login'}
+                                                    </Link>
+                                                </MenuItem>
+                                                <MenuItem key={"register"}  >
+                                                    <Link href="/register" underline="none" color="#101840" sx={{display: { xs: 'inline', sm: 'none' },fontWeight: 500,fontFamily: "inherit", marginInline: 2}}>
+                                                        {'Create an account'}
+                                                    </Link>
+                                                </MenuItem>
+                                            </Menu>
+                                            <Link href="/login" underline="none" color="#101840" sx={{ display: { xs: 'none', sm: 'inline' }, fontWeight: 500,fontFamily: "inherit", marginInline: 2}}>
                                                 {'Login'}
                                             </Link>
-                                            <Link href="/register" underline="none" color="#101840" sx={{fontWeight: 500,fontFamily: "inherit", marginInline: 2}}>
+                                            <Link href="/register" underline="none" color="#101840" sx={{display: { xs: 'none', sm: 'inline' },fontWeight: 500,fontFamily: "inherit", marginInline: 2}}>
                                                 <Button variant="contained" sx={{textTransform: "none", borderRadius: 5}}>{'Create an account'}</Button>
                                             </Link>
+                                            
                                             
                                         </div>
                                     )

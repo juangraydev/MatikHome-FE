@@ -21,9 +21,6 @@ import {
     Alert
 } from "@mui/material"
 
-import CloseIcon from '@mui/icons-material/Close';
-import jwt_decode from "jwt-decode"
-
 import "./style.css"
 
 function LandingPage() {
@@ -31,8 +28,15 @@ function LandingPage() {
     
 
     return (
-		<Container maxWidth={"xl"} className="Container" sx={{paddingInline: "70px!important"}}>
-            <Typography variant="h1" sx={{fontFamily: "inherit", color: "#101840", mt: 5, width: 620, mb: 3}}>
+		<Container maxWidth={"xl"} className="Container" sx={{paddingInline: "40px!important"}}>
+            <Typography sx={{ 
+                typography: { xs: 'h4', sm: 'h3', md: 'h2', lg: 'h1',  xl: 'h1' }, 
+                fontFamily: "inherit", 
+                color: "#101840", 
+                mt: 5, 
+                width: { xs: 350, sm: 500, md: 600, lg: 800,  xl: 800 }, 
+                mb: 3
+            }}>
                 Control your home from anywhere.
             </Typography>
             <Link href="/register" underline="none" color="#101840" sx={{fontWeight: 500,fontFamily: "inherit"}}>
