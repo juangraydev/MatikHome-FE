@@ -48,9 +48,20 @@ function LoginPage() {
         const error = validateForm(formData);
         setFormError(error)
         console.log("[formData]",formData);
-        // if(!Object.keys(error).length){
-        //     RegisterAPI(formData);
-        // }
+        if(!Object.keys(error).length){
+            RegisterAPI(formData)
+                .then(()=>{
+                    if(localStorage.getItem("TOKEN")){
+                        var decoded = jwt_decode(localStorage.getItem("TOKEN"));
+                        console.log("test decoded", decoded?.role);
+                        if(decoded?.role == 1){
+                            navigate("/admin");
+                        }else{
+                            navigate("/dashboard");
+                        }
+                    }
+                })
+        }
     }
 
     const validateForm = () => {

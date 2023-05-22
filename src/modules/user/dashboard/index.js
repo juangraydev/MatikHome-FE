@@ -77,7 +77,7 @@ function UserDashboard() {
             setHouse(homeData)
             setSelectedRooms("ALL")
             if(selectedHome == null){
-                dispatch(selectHome(homeData[1]))
+                dispatch(selectHome(homeData[0]))
                 dispatch(selectRoom("ALL")) 
             }else {
                 dispatch(selectRoom("ALL")) 
@@ -164,7 +164,7 @@ function UserDashboard() {
     }
 
     const settings = ['Home Setting', 'Device Setting', 'Accesibility Setting'];
-
+    console.log("[selectedHome]",homeData,isHomeDataPending);
     return (
     <>
         <Modal open={modal?.status} handleClose={handleCloseModal}>

@@ -29,6 +29,8 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 isPending: false,
+                selectedHome: null,
+                selectedRoom: null,
                 data: payload
             };
         case types.FAIL_HOME_DATA:

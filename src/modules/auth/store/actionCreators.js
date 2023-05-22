@@ -18,7 +18,7 @@ export function successUserData(data) {
 // return success status
 export function resetUserData() {
     return {
-        type: types.SUCCESS_USER_DATA
+        type: types.RESET_USER_DATA
     }
 }
 

@@ -81,6 +81,7 @@ function Content (props) {
 		handleCloseUserMenu()
 		if(value == "Logout"){
             dispatch(resetUserData());
+            localStorage.clear()
             navigate("/")
 		}
 	}

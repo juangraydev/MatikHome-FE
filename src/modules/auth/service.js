@@ -30,12 +30,13 @@ export const loginAPI = (data) => async dispatch => {
             })
     })
 }
-export const registerAPI = async (data) => {
+export const registerAPI = (data)  => async dispatch => {
     return new Promise(async (resolve, reject) => {
-        // dispatch(fetchLoginTokenData())
+        dispatch(fetchUserData());
         return Http.post(process.env.REACT_APP_API_REGISTER, data)
             .then(response => {
                 localStorage.setItem("TOKEN", response.data.body?.data?.token)
+                dispatch(successUserData(response.data.body?.data));
 		        store.dispatch(showMessage('success', "Register Success"))
                 resolve(response.data.body?.data?.token)
             })
