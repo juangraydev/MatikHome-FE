@@ -1,0 +1,13 @@
+@font-face {
+  font-family: Imported;
+  src: url(./shared/fonts//static//WorkSans-SemiBold);
+}
+
+#root {
+  font-family: Imported;
+}
+
+.body {
+  text-align: center;
+  background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+}

@@ -1,0 +1,20 @@
+{
+
+
+
+    "data":{
+        "home": 1,
+        "room": "ALL",
+        "devices": [
+            {
+                "id": 1,
+                "key": 123,
+                "type": "control",
+                "status": [
+                    {"value": true}
+                ]
+            }
+        ]
+    }
+
+}

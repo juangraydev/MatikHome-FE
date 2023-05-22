@@ -1,0 +1,19 @@
+[
+    {
+        "data":{
+            "type": "control",
+            "status": [
+                {"value": true}
+            ]
+        }
+    },
+    {
+        "data":{
+            "type": "monitor",
+            "status": [
+                {"temperature": 33},
+                {"humidity": 65}
+            ]
+        }
+    }
+]
