@@ -24,7 +24,7 @@ import {
 
 import { useSelector, useDispatch } from 'react-redux'
 import CloseIcon from '@mui/icons-material/Close';
-import {loginAPI, registerAPI} from "./__service"
+import {loginAPI, registerAPI} from "./service"
 import jwt_decode from "jwt-decode"
 import FormHelperText from '@mui/material/FormHelperText';
 
