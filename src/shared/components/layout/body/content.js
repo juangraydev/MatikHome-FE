@@ -53,7 +53,6 @@ function Content (props) {
     const location = useLocation();
     const navigate  = useNavigate();
     const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const [open, setOpen] = React.useState(false);
     
     const alertOpen = useSelector(state => state.alertMessage.open)
 	const alertType = useSelector(state => state.alertMessage.type)
@@ -101,21 +100,6 @@ function Content (props) {
         }
     }, [UserData ])
 
-    const [openLogin, setOpenLogin] = React.useState(false);
-    const handleLoginOpen = () => {
-        setOpenLogin(true)
-        setFormData(logInitState);
-        setFormError({});
-    };
-    const handleLoginClose = () => setOpenLogin(false);
-
-    const [openRegister, setOpenRegister] = React.useState(false);
-    const handleRegisterOpen = () => {
-        setOpenRegister(true);
-        setFormData(regInitState);
-        setFormError({});
-    }
-    const handleRegisterClose = () => setOpenRegister(false);
 
     const handleCloseNavMenu = () => {
         // setAnchorElNav(null);
@@ -222,149 +206,6 @@ function Content (props) {
                 </Box>
             </Box>
 
-
-        {   // Login Form Modal
-            <Modal
-                open={openLogin}
-                onClose={handleLoginClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                >
-                <Paper elevation={3} sx={{  position: "relative", height: 'fit-content', width: 350, margin: "calc(100vh - 95vh + 10px) auto", padding: "35px", backdropFilter: "blur(5)"}} >
-                    <IconButton sx={{ position: "absolute", right: 20, top: 20}} onClick={handleLoginClose}>
-                        <CloseIcon/>
-                    </IconButton>
-                    <img src={require("../../../images/matik-upper.png")} alt="logo" width={270} style={{margin: "auto",  display: "block"}}/>
-                    <Typography variant="h5" gutterBottom sx={{textAlign: "center", fontWeight: 600}} mt={3}>
-                        Login to Your Account
-                    </Typography>
-                    <TextField 
-                        id="username" 
-                        label="Username" 
-                        variant="outlined" 
-                        onChange={handleOnChange}
-                        sx={{marginTop: "15px", width: "100%"}} 
-                        error={formError?.username}
-                        helperText={formError?.username}
-                    />
-                    <TextField 
-                        id="password" 
-                        label="Password" 
-                        variant="outlined" 
-                        type={"password"} 
-                        onChange={handleOnChange}
-                        sx={{marginTop: "15px", width: "100%"}} 
-                        error={formError?.password}
-                        helperText={formError?.password}
-                    />
-                    <Button 
-                        variant="contained"
-                        onClick={handleSubmitForm}
-                        sx={{marginTop: "15px", width: "100%"}}
-                    >
-                        <Typography variant="button" gutterBottom sx={{fontWeight: 600, marginBlock: 0.35 }} >
-                            Login 
-                        </Typography>
-                    </Button>
-                    <Typography variant="button" gutterBottom sx={{fontWeight: 400, marginBlock: 0.8, display: "block", textAlign: "right"}} >
-                        Don't have an account?  
-                        <Link
-                            component="button"
-                            variant="button"
-                            sx={{marginLeft: "5px"}}
-                            onClick={() => {handleRegisterOpen(); handleLoginClose()}}
-                        >
-                            Register now!
-                        </Link>
-                    </Typography>
-                </Paper>
-            </Modal>
-        }
-        {   // Register Form Modal
-            <Modal
-                open={openRegister}
-                onClose={handleRegisterClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                >
-                <Paper elevation={3} sx={{  position: "relative", height: 'fit-content', width: 350, margin: "calc(100vh - 95vh + 10px) auto", padding: "35px", backdropFilter: "blur(5)"}} >
-                    <IconButton sx={{ position: "absolute", right: 20, top: 20}} onClick={handleRegisterClose}>
-                        <CloseIcon/>
-                    </IconButton>
-                    <img src={require("../../../images/matik-upper.png")} alt="logo" width={270} style={{margin: "auto",  display: "block"}}/>
-                    <Typography variant="h5" gutterBottom sx={{textAlign: "center", fontWeight: 600}} mt={3}>
-                        Register an Account
-                    </Typography>
-                    <TextField 
-                        id="housename" 
-                        label="My Home Name"
-                        variant="outlined" 
-                        onChange={handleOnChange}
-                        sx={{marginTop: "15px", width: "100%"}} 
-                        error={formError?.housename}
-                        helperText={formError?.housename}
-                    />
-                    <TextField 
-                        id="name" 
-                        label="Name" 
-                        variant="outlined" 
-                        onChange={handleOnChange}
-                        sx={{marginTop: "15px", width: "100%"}} 
-                        error={formError?.name}
-                        helperText={formError?.name}
-                    />
-                    <TextField 
-                        id="username" 
-                        label="Username" 
-                        variant="outlined" 
-                        sx={{marginTop: "15px", width: "100%"}} 
-                        onChange={handleOnChange}
-                        error={formError?.username}
-                        helperText={formError?.username}
-                    />
-                    <TextField 
-                        id="password" 
-                        label="Password" 
-                        variant="outlined" 
-                        type={"password"} 
-                        sx={{marginTop: "15px", width: "100%"}} 
-                        onChange={handleOnChange}
-                        error={formError?.password}
-                        helperText={formError?.password}
-                    />
-                    <TextField 
-                        id="cpassword" 
-                        label="Confirm Password" 
-                        variant="outlined" 
-                        type={"password"} 
-                        sx={{marginTop: "15px", width: "100%"}} 
-                        onChange={handleOnChange}
-                        error={formError?.cpassword}
-                        helperText={formError?.cpassword}
-                    />
-                    <Button 
-                        variant="contained"
-                        sx={{marginTop: "15px", width: "100%"}} 
-                        onClick={handleSubmitForm}
-                    >
-                        <Typography variant="button" gutterBottom sx={{fontWeight: 600, marginBlock: 0.35 }} >
-                            Register 
-                        </Typography>
-                    </Button>
-                    <Typography variant="button" gutterBottom sx={{fontWeight: 400, marginBlock: 0.8, display: "block", textAlign: "right"}} >
-                        Already have an account?  
-                        <Link
-                            component="button"
-                            variant="button"
-                            sx={{marginLeft: "5px"}}
-                            onClick={() => {handleRegisterClose(); handleLoginOpen()}}
-                        >
-                            Login now!
-                        </Link>
-                    </Typography>
-                </Paper>
-            </Modal>
-        }
 	</React.Fragment>
     );
 }
