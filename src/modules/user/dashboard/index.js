@@ -75,19 +75,27 @@ function UserDashboard() {
     React.useEffect(()=>{
         if (homeData) {
             setHouse(homeData)
-            setSelectedRooms("ALL")
+            setControlType("ALL")
+            console.log("[homeData]", selectedHome, homeData);
             if(selectedHome == null){
                 dispatch(selectHome(homeData[0]))
-                dispatch(selectRoom("ALL")) 
             }else {
-                dispatch(selectRoom("ALL")) 
+                let tempHome = homeData.filter(home => {
+                    return home?.id == selectedHome?.id
+                })
+                
+                dispatch(selectHome(tempHome[0]))
             }
+            dispatch(selectRoom("ALL")) 
         }
     },[homeData])
 
     //SET ROOMS TO COMPONENT STATE
     React.useEffect(()=>{
-        if(selectedHome) setRooms(selectedHome['rooms'])
+        if(selectedHome) {
+            console.log("update",selectedHome);
+            setRooms(selectedHome['rooms'])
+        }
         
     },[selectedHome])
 

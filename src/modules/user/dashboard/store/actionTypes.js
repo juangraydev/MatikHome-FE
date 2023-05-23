@@ -1,5 +1,6 @@
 export const FETCH_HOME_DATA = 'FETCH_HOME_DATA';
 export const SUCCESS_HOME_DATA = 'SUCCESS_HOME_DATA';
 export const FAIL_HOME_DATA = 'FAIL_HOME_DATA';
+export const RESET_HOME_DATA = 'RESET_HOME_DATA';
 export const SELECTED_HOME = 'SELECTED_HOME';
 export const SELECTED_ROOM = 'SELECTED_ROOM';

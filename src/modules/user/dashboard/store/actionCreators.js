@@ -7,6 +7,12 @@ export function fetchHomeData() {
     }
 }
 
+export function resetHomeData() {
+    return {
+        type: types.RESET_HOME_DATA
+    }
+}
+
 // return success status
 export function successHomeData(data) {
     return {

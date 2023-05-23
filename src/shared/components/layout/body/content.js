@@ -45,6 +45,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import MuiAlert from '@mui/material/Alert';
 
 import {resetUserData} from "../../../../modules/auth/store/actionCreators"
+import {resetHomeData} from "../../../../modules/user/dashboard/store/actionCreators"
 
 import { hideMessage } from '../../../../router/store/actionCreators'
 const settings = ['Account Setting', 'Logout'];
@@ -83,6 +84,7 @@ function Content (props) {
 		handleCloseUserMenu()
 		if(value == "Logout"){
             dispatch(resetUserData());
+            dispatch(resetHomeData());
             localStorage.clear()
             navigate("/")
 		}
@@ -116,7 +118,7 @@ function Content (props) {
 				open={alertOpen}
 				onClose={handleClose}
 				autoHideDuration={3000}
-				anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+				anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
 			>
                 <MuiAlert elevation={6} variant='filled' onClose={handleClose} severity={alertType}>
 					<div style={{ whiteSpace: 'pre' }}>{alertMessage}</div>

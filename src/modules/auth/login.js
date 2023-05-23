@@ -19,7 +19,8 @@ import {
 	Button,
     IconButton,
     OutlinedInput,
-    Alert
+    Alert,
+    FormControl
 } from "@mui/material"
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -82,30 +83,36 @@ function LoginPage() {
                 <Typography variant="h4" sx={{fontSize: "2rem",fontFamily: "inherit",  textAlign: "center", color: "#101840" }} mt={2}>
                 Login to Your Account
                 </Typography>
-                <Typography gutterBottom sx={{fontFamily: "inherit", fontSize: '14px', color: "#101840", textAlign: "left", fontWeight: 500, marginTop: 3}}>
-                    Username
-                </Typography>
-                <OutlinedInput 
-                    id="username" 
-                    placeholder="Your username here" 
-                    sx={{width: "-webkit-fill-available"}}
-                    onChange={handleOnChange}
-                    error={formError?.username}
-                />
-                <FormHelperText error={formError?.username}>{formError?.username}</FormHelperText>
-                <Typography gutterBottom sx={{fontFamily: "inherit", fontSize: '14px', color: "#101840", textAlign: "left", fontWeight: 500, marginTop: 2}}>
-                    Password
-                </Typography>
-                <OutlinedInput 
-                    id="password" 
-                    placeholder="Your password here" 
-                    sx={{width: "-webkit-fill-available"}}
-                    type={"password"} 
-                    onChange={handleOnChange}
-                    error={formError?.password}
-                    helperText={formError?.password}
-                />
-                <FormHelperText error={formError?.password}>{formError?.password}</FormHelperText>
+                <FormControl sx={{width: "-webkit-fill-available"}}>
+                    <Typography gutterBottom sx={{fontFamily: "inherit", fontSize: '14px', color: "#101840", textAlign: "left", fontWeight: 500, marginTop: 3}}>
+                        Username
+                    </Typography>
+                    <OutlinedInput 
+                        id="username" 
+                        placeholder="Your username here" 
+                        sx={{width: "-webkit-fill-available"}}
+                        onChange={handleOnChange}
+                        error={formError?.username}
+                    />
+                    <FormHelperText error={formError?.username}>{formError?.username}</FormHelperText>
+                </FormControl>
+                <FormControl sx={{width: "-webkit-fill-available"}}>
+                    <Typography gutterBottom sx={{fontFamily: "inherit", fontSize: '14px', color: "#101840", textAlign: "left", fontWeight: 500, marginTop: 2}}>
+                        Password
+                    </Typography>
+                    <OutlinedInput 
+                        id="password" 
+                        placeholder="Your password here" 
+                        sx={{width: "-webkit-fill-available"}}
+                        type={"password"} 
+                        onChange={handleOnChange}
+                        error={formError?.password}
+                        helperText={formError?.password}
+                    />
+                    <FormHelperText error={formError?.password}>{formError?.password}</FormHelperText>
+                </FormControl>
+                
+                
                 <Button 
                     variant="contained"
                     onClick={handleSubmitForm}
