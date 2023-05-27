@@ -43,7 +43,6 @@ export default function SelectTextFields({selected, houses, setSelectedHouse}) {
     setSelectedHouse(houses[house])
   }
 
-  console.log("selected", houses, selected);
 
   return (
     <Box

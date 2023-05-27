@@ -39,9 +39,7 @@ function HomeSetting() {
     const selectedRoom = useSelector(state => state.homeData.selectedRoom)
 
     const handleClick = (value) => {
-        console.log("test", value);
     }
-    console.log("[selectedRoom]", selectedHome, selectedRoom);
     return (
 		<Container maxWidth={"xl"} className="Container" sx={{paddingInline: "70px!important"}}>
             <div style={{display: "flex", alignItems: "center"}}>
@@ -78,7 +76,6 @@ function HomeSetting() {
             </div>
             <Grid container spacing={2}>
                 {selectedHome && selectedHome?.rooms?.map((room, idx) => {
-                    console.log("[room]", room);
                     return <RoomCard setControlType={handleClick} controlType={"ALL"} name={room?.name} icon={room?.type}></RoomCard>
                 })}
             </Grid>

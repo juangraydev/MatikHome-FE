@@ -30,8 +30,9 @@ import GarageIcon from '@mui/icons-material/Garage';
 import BusinessIcon from '@mui/icons-material/Business';
 import CloseIcon from '@mui/icons-material/Close';
 
-import { addRoom, editRoom } from "../../../../modules/user/dashboard/service"
+import { addHome, editHome } from "../../../../modules/user/dashboard/service"
 import { useSelector, useDispatch } from 'react-redux'
+import { Home } from "@mui/icons-material";
 
 const style = {
     position: 'absolute',
@@ -44,59 +45,36 @@ const style = {
     p: 2
   };
 
-
-  const CustomizedSelectForFormik = ({ children, form, field }) => {
-    const { name, value } = field;
-    const { setFieldValue } = form;
-  
-    return (
-      <Select
-        name={name}
-        value={value}
-        onChange={e => {
-          setFieldValue(name, e.target.value);
-        }}
-      >
-        {children}
-      </Select>
-    );
-  };
-
-function AddRoom({open, setOpen, data, type="add"}) {
+function AddHome({open, handleClose, data, type="add"}) {
 	const dispatch = useDispatch()
 
-    const [initVal, setInitVal] = React.useState({ name: '', type: 0 });
-
-    const selectedHome = useSelector(state => state.homeData.selectedHome)
+    const [initVal, setInitVal] = React.useState({ name: '' });
 
     React.useEffect(()=>{
         if(data && type=="edit") {
-            setInitVal(data)
+            setInitVal({id: data?.id, name: data?.name})
         }else{
-            setInitVal({ name: '', type: 0 })
+            setInitVal({ name: ''})
         }
     }, [data])
     
-    const AddRoomAPI = (data) => {
-        dispatch(addRoom(selectedHome, data))
+    const AddHomeAPI = (data) => {
+        dispatch(addHome(data))
             .then(()=>{
                 handleClose();
             })
     }
 
-    const EditRoomAPI = (data) => {
-        dispatch(editRoom(data))
+    const EditHomeAPI = (data) => {
+        dispatch(editHome(data))
             .then(()=>{
                 handleClose();
             })
-    }
-
-    const handleClose =() => {
-        setOpen(false)
     }
 
     return (
         <Modal
+            key={'home'}
             open={open}
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
@@ -105,7 +83,7 @@ function AddRoom({open, setOpen, data, type="add"}) {
         >
             <Paper sx={style}>
                 <div style={{display: "flex"}}>
-                    <Typography variant="h6" sx={{ flexGrow: 1}}>{type == "add" ? 'Add Room' : 'Edit Room'}</Typography>
+                    <Typography variant="h6" sx={{ flexGrow: 1}}>{type == "add" ? 'Add Home' : 'Edit Home'}</Typography>
                     <IconButton onClick={handleClose} sx={{float: "right"}}>
                         <CloseIcon/>
                     </IconButton>
@@ -119,18 +97,14 @@ function AddRoom({open, setOpen, data, type="add"}) {
                         if (!values.name) {
                             errors.name = 'This Field is Required';
                         } 
-                        if (values.type == null) {
-                            errors.type = 'Required';
-                        } 
-
                         return errors;
                     }}
                     onSubmit={(values, { setSubmitting }) => {
                         setTimeout(() => {
                             if(type == "add"){
-                                AddRoomAPI(values)
+                                AddHomeAPI(values)
                             }else if(type == "edit"){
-                                EditRoomAPI(values)
+                                EditHomeAPI(values)
                             }
                             setSubmitting(false);
                         }, 400);
@@ -149,11 +123,11 @@ function AddRoom({open, setOpen, data, type="add"}) {
                         <form onSubmit={handleSubmit}>
                             <FormControl fullWidth>
                                 <Typography gutterBottom sx={{fontFamily: "inherit", fontSize: '14px', color: "#101840", textAlign: "left", fontWeight: 500, marginTop: 2}}>
-                                    {'Room Name'}
+                                    {'Home Name'}
                                 </Typography>
                                 <OutlinedInput 
                                     id="name" 
-                                    placeholder="Room Name" 
+                                    placeholder="Home Name" 
                                     sx={{width: "-webkit-fill-available"}}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -162,30 +136,6 @@ function AddRoom({open, setOpen, data, type="add"}) {
                                 />
                                 <FormHelperText error={errors?.name}>{touched.name && errors?.name}</FormHelperText>
                             </FormControl>
-
-                            <FormControl fullWidth>
-                                <Typography gutterBottom sx={{fontFamily: "inherit", fontSize: '14px', color: "#101840", textAlign: "left", fontWeight: 500, marginTop: 2}}>
-                                    {'Room Type'}
-                                </Typography>
-                                <Field
-                                    name="type"
-                                    component={CustomizedSelectForFormik}
-                                    sx={{
-                                        '& .MuiSelect-select': {
-                                            display: "flex", 
-                                            alignItems: "center"
-                                        }
-                                    }}
-                                >
-                                    <MenuItem value={0} sx={{alignItems: "center"}}><KitchenIcon sx={{fontSize: 18, color: "#039be5", marginRight: 1}}/>{"Kitchen"}</MenuItem>
-                                    <MenuItem value={1} sx={{alignItems: "center"}}><ChairIcon sx={{fontSize: 18, color: "#039be5", marginRight: 1}}/>{"Living Room"}</MenuItem>
-                                    <MenuItem value={2} sx={{alignItems: "center"}}><SingleBedIcon sx={{fontSize: 18, color: "#039be5", marginRight: 1}}/>{"Bed Room"}</MenuItem>
-                                    <MenuItem value={3} sx={{alignItems: "center"}}><BusinessIcon sx={{fontSize: 18, color: "#039be5", marginRight: 1}}/>{"Office"}</MenuItem>
-                                    <MenuItem value={4} sx={{alignItems: "center"}}><GarageIcon sx={{fontSize: 18, color: "#039be5", marginRight: 1}}/>{"Garage"}</MenuItem>
-                                </Field>
-                                <FormHelperText error={errors?.type}>{touched.type && errors?.type}</FormHelperText>
-                            </FormControl>
-
                             <FormControl sx={{display: "flex", flexDirection: "inherit"}}>
                                 <Button 
                                     variant="text"
@@ -218,4 +168,4 @@ function AddRoom({open, setOpen, data, type="add"}) {
     );
 }
 
-export default AddRoom;
+export default AddHome;

@@ -24,7 +24,6 @@ import GarageIcon from '@mui/icons-material/Garage';
 import BusinessIcon from '@mui/icons-material/Business';
 
 function RoomCard(props) {
-    console.log("props.controlType",props.controlType);
     
     return (
     <>

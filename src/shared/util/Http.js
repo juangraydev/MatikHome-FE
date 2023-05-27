@@ -44,7 +44,16 @@ Http.interceptors.response.use(
 		return response
 	},
 	function (error) {
-
+		const status = error.response.status
+		let message = ''
+		//This block triggers when backend returns the expected error message structure
+		let resp_data = error.response.data
+		
+		const err_resp = resp_data.response_details.error
+		message = err_resp.message
+		// const status_code = err_resp.status_code
+		const detail = err_resp.detail
+		store.dispatch(showMessage("error", '[' + status + '] ' + message + '\n' + detail))
 		return Promise.reject(error)
 	},
 )

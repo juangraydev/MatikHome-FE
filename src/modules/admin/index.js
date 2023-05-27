@@ -54,7 +54,6 @@ function Admin() {
 
 
     React.useEffect(()=>{
-        console.log("location:",pageType);
     }, [pageType])
   
 	const handleOpenUserMenu = (event) => {

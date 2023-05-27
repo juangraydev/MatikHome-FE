@@ -49,7 +49,6 @@ const homesCol = [
 		renderCell: (params) => {
 			let open = 0;
 			const currentRow = params.row;
-			console.log("row:", currentRow.rooms, JSON.stringify(currentRow, null, 4));
 			return (
 				<RoomsComp currentRow={currentRow}/>
 			);
@@ -81,7 +80,6 @@ const homesCol = [
 
 const RoomsComp = ({currentRow}) => {
 	const [open, setOpen] = React.useState(0);
-	console.log("OPEN:",currentRow.rooms);
 	return (
 		<Container maxWidth={false} variant="div" sx={{display: "flex", flexDirection: "column", height: open ? "fit-content" : 52}}>	
 			<div style={{display: "flex", alignItems: 'center'}}>
@@ -138,7 +136,6 @@ function HomeManagement() {
 	React.useEffect(()=>{
 		getHomesAPI()
 			.then((res) => {
-				console.log("[devices]", res);
 				setHomes(res);
 			})
 			.catch(() => {

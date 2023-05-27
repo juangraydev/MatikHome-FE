@@ -38,8 +38,7 @@ function DashboardAdmin() {
 
     const summaryData = useSelector(state => state.adminData.summaryData)
     const summaryFetch = useSelector(state => state.adminData.isPending)
-		console.log("[summaryFetch]", summaryFetch);
-
+	
 	React.useEffect(()=>{
 		dispatch(getAdminSummary())
 	}, [])

@@ -80,7 +80,6 @@ export default function GeneralSetting({data}) {
   React.useEffect(() => {
     setHouseName(data?.name);
     setRooms(data?.rooms);
-    console.log("data:", data);
   },[data])
 
   const handleChangeName = (e) => {
@@ -93,7 +92,6 @@ export default function GeneralSetting({data}) {
   }
   
   const handleChange = (panel) => (event, isExpanded) => {
-        console.log("event:",addBtn);
       if(addBtn == 0){
         setExpanded(isExpanded ? panel : false);
       }else {

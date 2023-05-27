@@ -74,7 +74,6 @@ function UserManagement() {
 	React.useEffect(()=>{
 		getUsersAPI()
 			.then((res) => {
-				console.log("[users]", res);
 				setUsers(res);
 			})
 			.catch(() => {

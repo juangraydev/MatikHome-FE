@@ -77,7 +77,6 @@ function DeviceManagement() {
 	React.useEffect(()=>{
 		getDeviceAPI()
 			.then((res) => {
-				console.log("[users]", res);
 				setDevices(res);
 			})
 			.catch(() => {
