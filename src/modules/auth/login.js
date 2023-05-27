@@ -78,7 +78,7 @@ function LoginPage() {
             <Paper
                 sx={{minWidth: 300, maxWidth: 400, height: 'auto', margin: "auto", paddingBlock: 3, paddingInline: 4}}
             >
-                <img onClick={()=>{navigate("/")}} src={require("../../shared/images/matik_upper_2.png")} alt="logo" style={{width: "-webkit-fill-available", margin: "auto",  display: "block"}}/>
+                <img onClick={()=>{navigate("/")}} src={require("../../shared/images/matik_upper_4.png")} alt="logo" style={{width: "-webkit-fill-available", margin: "auto",  display: "block"}}/>
                 <Typography variant="h4" sx={{fontSize: "2rem",fontFamily: "inherit",  textAlign: "center", color: "#101840" }} mt={2}>
                 Login to Your Account
                 </Typography>
