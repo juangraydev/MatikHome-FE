@@ -39,7 +39,7 @@ export const registerAPI = (data)  => async dispatch => {
                 resolve(response.data.body?.data?.token)
             })
             .catch(error => {
-		        store.dispatch(showMessage('error', "Something when wrong. Connact the administrator"))
+		        store.dispatch(showMessage('error', "Something when wrong. Contact the administrator"))
                 reject(error)
             })
     })

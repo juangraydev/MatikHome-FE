@@ -1,15 +1,8 @@
-// import DashboardComponent from "./DashboardAdmin";
-
-
-// export const DashboardAdmin = DashboardComponent
-
-
-
 import * as React from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
 	Box,
-	IconButton, Paper, Grid
+	IconButton, Paper, Grid, Tab, Tabs
 } from "@mui/material"
 import Header from "../user/component/header"
 
@@ -20,111 +13,73 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import CloseIcon from '@mui/icons-material/Close';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import OtherHousesIcon from '@mui/icons-material/OtherHouses';
-import DeviceHubIcon from '@mui/icons-material/DeviceHub';
-import RecentActorsIcon from '@mui/icons-material/RecentActors';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { useLocation } from 'react-router-dom';
-import Dashboard from './DashboardAdmin';
-import DeviceManagement from './DeviceManagement';
-import UserManagement from './UserManagement';
-import HomeManagement from './HomeManagement';
 
-const drawerWidth = 240;
-
-const settings = ['Account Setting', 'Logout'];
-const pages = ['Dashboard', 'Home Management', 'Device Management', 'User Management'];
-
-function Admin() {
-	const navigate  = useNavigate();
-    let location = useLocation();
-	const [anchorElUser, setAnchorElUser] = React.useState(null);
-    const [pageType, setPageType] = React.useState(0);
+import { Route, Routes } from "react-router-dom";
 
 
-    React.useEffect(()=>{
-    }, [pageType])
-  
-	const handleOpenUserMenu = (event) => {
-		setAnchorElUser(event.currentTarget);
-	};
+import Dashboard from './module/Dashboard';
+import UserManagement from './module/UserManagement';
+import HomeManagement from './module/HomeManagement';
+import DeviceManagement from './module/DeviceManagement';
+
+const AdminModule = ({module}) => {
+	switch (module) {
+		case 0:
+			return <Dashboard/>
+
+		case 1:
+			return <UserManagement/>
+			break;
+
+		case 2:
+			return <HomeManagement/>
+
+		case 3:
+			return <DeviceManagement/>
 	
-	const handleCloseUserMenu = () => {
-		setAnchorElUser(null);
-	};
-	
-	const handleSelectUserMenu = (value) => {
-		handleCloseUserMenu()
-		if(value == "Logout"){
-		localStorage.clear()
-		navigate("/")
-		}
+		default:
+			return <Dashboard/>
 	}
-	
+}
 
-    
+export default function AdminDashboard() {
+	const [value, setValue] = React.useState(0);
+
+	const handleChange = (event, newValue) => {
+	  setValue(newValue);
+	};
+	
     return (
 	<React.Fragment>
 		<Box component="main" sx={{ flexGrow: 1, }}>
-			<Container maxWidth={"xl"} sx={{padding: "24px 24px"}}>
-				{/* <Drawer
-					id="test"
-					variant="permanent"
+			<Container maxWidth={"xl"}>
+				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+					<Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+						<Tab 
+							label="Summary"
+						/>
+						<Tab 
+							label="User Management"
+						/>
+						<Tab 
+							label="Home Management"
+						/>
+						<Tab 
+							label="Device Management"
+						/>
+					</Tabs>
+				</Box>
+				<Box
+					component={'div'}
 					sx={{
-						width: drawerWidth,
-						flexShrink: 0,
-						[`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+						mt: 2
 					}}
 				>
-					<Toolbar />
-					<Box sx={{ overflow: 'auto' }}>
-					<List>
-						{pages.map((text, index) => (
-						<ListItem key={text} disablePadding>
-							<ListItemButton onClick={()=>setPageType(index)}>
-								<ListItemIcon sx={{minWidth: 35}}>
-									{index == 0 ? <DashboardIcon/> : (index == 1 ? <OtherHousesIcon /> : index == 2 ? <DeviceHubIcon /> : <RecentActorsIcon /> ) }
-								</ListItemIcon>
-								<ListItemText primary={text} />
-							</ListItemButton>
-						</ListItem>
-						))}
-					</List>
-					
-					</Box>
-				</Drawer> */}
-				<Typography variant="h6" gutterBottom>Admin / {pages[pageType]}</Typography>
-					
-					{
-						pageType === 0 && <Dashboard/>
-					}
-					{
-						pageType === 1 && <HomeManagement/>
-					}
-					{
-						pageType === 2 && <DeviceManagement/>
-					}
-					{
-						pageType === 3 && <UserManagement/>
-					}
+					<AdminModule module={value} />
+				</Box>
 			</Container>
-				
-			
 		</Box>
 
 	</React.Fragment>
   );
 }
-
-export default Admin;

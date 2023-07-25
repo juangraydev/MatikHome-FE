@@ -4,7 +4,10 @@ import {
     successHomeData,
     failHomeData,
     selectHome,
-    selectRoom
+    selectRoom,
+    fetchHomeDevice,
+    successHomeDevice,
+    failHomeDevice
 } from './store/actionCreators'
 
 import { store } from '../../../store/config'
@@ -97,4 +100,16 @@ export const deleteRoom = (id) => async dispatch => {
                 reject()
             })
     })
+}
+
+export const deviceList = (home_id) => async dispatch => {
+    dispatch(failHomeDevice())
+    return Http.get(process.env.REACT_APP_API_DEVICE_LIST+`${home_id}/`)
+        .then(response => {
+            dispatch(successHomeDevice(response.data.body?.data))
+        })
+        .catch(error => {
+            dispatch(failHomeDevice(error))
+        })
+    
 }

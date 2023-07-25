@@ -7,6 +7,10 @@ const initialState = {
     error: null,
     selectedHome: null,
     selectedRoom: null,
+
+    isPendingDevice: false,
+    dataDevice: null,
+    errorDevice: null
 }
 /* Function: reducer()
 * Description: fetch data from API /info_data
@@ -50,7 +54,27 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 selectedRoom: payload
-            }
+        }
+        /**
+         * Device list
+         */
+        case types.FETCH_HOME_DEVICE:
+            return {
+                ...state,
+                isPendingDevice: true,
+            };
+        case types.SUCCESS_HOME_DEVICE:
+            return {
+                ...state,
+                isPendingDevice: false,
+                dataDevice: payload
+            };
+        case types.FAIL_HOME_DEVICE:
+            return {
+                ...state,
+                isPendingDevice: false,
+                errorDevice: payload
+            };
         default:
             return state;
     }

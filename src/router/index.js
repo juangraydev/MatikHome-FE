@@ -1,32 +1,29 @@
 import { Route, Routes } from "react-router-dom";
-import LandingPage from "../modules/auth/index";
-import LoginPage from "../modules/auth/login";
-import RegisterPage from "../modules/auth/register";
-import { UserDashboard, HomeSetting } from "../modules/user";
+import { UserDashboard } from "../modules/user";
 import  Admin  from "../modules/admin/index";
 
-import Content from "../shared/components/layout/body/content"
+import AuthPage from "../modules/auth/index";
+
+import Layout from "../shared/layout"
 
 function Router() {
 	
   return (
-    <Content>
+    <Layout>
       <Routes>
-          <Route path="/" element={<LandingPage/>}></Route>
-          <Route path="/login" element={<LoginPage/>}></Route>
-          <Route path="/register" element={<RegisterPage/>}></Route>
+          {/**Auth page Login/Register */}
+          <Route path="/" element={<AuthPage/>}></Route>
 
-
+          {/** User pages */}
           <Route path="/dashboard" element={<UserDashboard/>}></Route>
-          <Route path="/home/setting" element={<HomeSetting/>}></Route>
-          <Route path="/home/device/setting" element={<HomeSetting/>}></Route>
-          <Route path="/home/access/setting" element={<HomeSetting/>}></Route>
-
-
-
           <Route path="/admin" element={<Admin/>}></Route>
+
+
+          {/* <Route path="/admin/device-management" element={<Admin/>}></Route>
+          <Route path="/admin/home-management" element={<Admin/>}></Route>
+          <Route path="/admin/user-management" element={<Admin/>}></Route> */}
       </Routes>
-    </Content>
+    </Layout>
   );
 }
 

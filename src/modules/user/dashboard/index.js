@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import {
 	Container,
 	Box,
+    Button,
 	Typography,
 	Paper,
     Grid,
+    IconButton,
+    Menu,
+    MenuItem
 } from "@mui/material"
 
 import Modal from "../../../shared/components/modal/index"
@@ -21,6 +25,15 @@ import {
     selectHome,
     selectRoom
 } from './store/actionCreators'
+import { Settings } from "@mui/icons-material";
+import HomeSetting from "./component/HomeSetting"
+
+import KitchenIcon from '@mui/icons-material/Kitchen';
+import ChairIcon from '@mui/icons-material/Chair';
+import SingleBedIcon from '@mui/icons-material/SingleBed';
+import GarageIcon from '@mui/icons-material/Garage';
+import BusinessIcon from '@mui/icons-material/Business';
+import DevicesOtherIcon from '@mui/icons-material/DevicesOther';
 
 
 
@@ -55,6 +68,8 @@ function UserDashboard() {
                 let tempHome = homeData.filter(home => {
                     return home?.id == selectedHome?.id
                 })
+
+                console.log("tempHome",tempHome[0]);
                 
                 dispatch(selectHome(tempHome[0]))
             }
@@ -72,11 +87,11 @@ function UserDashboard() {
 
     // [WebSocket QUERY]
     React.useEffect(() => {
-        if(isNaN(selectedHome)){
-            const url = 'ws://localhost:8000/ws/'+ selectedHome?.id +'/' + selectedRoom  + '/';
+        if(isNaN(selectedHome) && isNaN(selectedRoom) ){
+            const url = process.env.REACT_APP_WS_URL+ selectedHome?.id +'/';
             setClient(new W3CWebSocket(url))
         }
-    }, [selectedHome,selectedRoom])
+    }, [selectedHome])
 
 
     // [WebSocket Functions]
@@ -110,13 +125,158 @@ function UserDashboard() {
         setModal({...modal, status: false});
     }
 
+    const handleChangeRoom = (event) => {
+        dispatch(selectRoom(event.target.id))
+    }
+
     return (
-    <>
-        <Modal open={modal?.status} handleClose={handleCloseModal}>
-            {selectedHome?.name && <GeneralSetting data={selectedHome}/>}
-        </Modal>
-        <Container maxWidth={"xl"} sx={{padding: "24px 24px", margin: 0}}> 
-            <Box sx={{ width: '100%' }}>
+    <>  
+        <Container maxWidth={false} sx={{paddingY: 1.5, margin: 0}}> 
+            <Box
+                component={"div"}
+                sx={{
+                    paddingBottom: 1.5,
+                    display: "flex"
+                }}
+            >
+                <Typography 
+                    variant="h4"
+                    sx={{
+                        flexGrow: 1,
+                    }}    
+                >
+                    { selectedHome && selectedHome.name.charAt(0).toUpperCase() + selectedHome.name.slice(1)  }
+                </Typography>
+                <Box component={"div"}>
+                    <HomeSetting/>
+                </Box>
+                
+            </Box>
+            
+            <Box
+                component={"div"}
+                sx={{
+                    display: "flex",
+                    gap: 1.5,
+                    height: 55,
+                    overflowX: 'auto',
+                    scrollPaddingTop: 2
+                }}
+            >
+                <Button 
+                    variant="contained" 
+                    id="ALL"
+                    sx={{ 
+                        background: selectedRoom == "ALL" ? "#1976d2" : "#e5e5e5", 
+                        color:  selectedRoom == "ALL" ? "#fff" : "#000",
+                        fontSize: '14px',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        minWidth: 'fit-content',
+                        maxHeight: 36
+                    }} 
+                    onClick={handleChangeRoom}
+                >
+                    All
+                </Button>
+                { rooms && rooms.map((room) => 
+                    <Button 
+                        variant="contained"
+                        sx={{ 
+                            background: selectedRoom == room?.id ? "#1976d2" : "#e5e5e5", 
+                            color:  selectedRoom == room?.id ? "#fff" : "#000",
+                            fontSize: '14px',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            minWidth: 'fit-content',
+                            maxHeight: 36,
+                            '&:hover': {
+                                color: 'white',
+                            }
+                        }}
+                        startIcon={
+                            {
+                                0: (
+                                    <KitchenIcon />
+                                ),
+                                1: (
+                                    <ChairIcon />
+                                ),
+                                2: (
+                                    <SingleBedIcon/>
+                                ),
+                                3: (
+                                    <BusinessIcon/>
+                                ),
+                                4: (
+                                    <GarageIcon />
+                                ),
+                                default: (
+                                    <ChairIcon/>
+                                )
+                            }[room.type]
+                        }
+                        id={room?.id}
+                        onClick={handleChangeRoom}
+                    >
+                        {room?.name}
+                    </Button>
+                ) }
+                
+            </Box>
+            <Box
+                component={"div"}
+                sx={{
+                    display: "flex",
+                    // gap: 2,
+                    flexWrap: 'wrap',
+                    mt: 2
+                }}
+            >
+            <Grid container spacing={2}>
+            {
+                devices 
+                    ? devices?.filter((device)=> selectedRoom == 'ALL' ? device : device?.room == selectedRoom)?.map((device, idx) => {
+                        const val = JSON.parse(device.status)?.on
+                        return(
+                            <Grid item xs={6} sm={6} md={4} lg={3} xl={2}>
+                                <Paper onClick={()=>handleClickChannel(device.id, !val)} sx={{
+                                    backgroundColor: (!val ? "#e0e0e0" : "white"),
+                                    height: "auto", 
+                                    padding: 2, 
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    width: '100%',
+                                }}>
+                                    <TungstenIcon 
+                                        sx={{
+                                            fontSize: 32, 
+                                            color: (!val  ? "#616161" : "#039be5")
+                                        }}
+                                    />
+                                    <Box sx={{display: "flex", flexDirection: "column", paddingTop: "10px"}}>
+                                        <Typography variant="button" gutterBottom sx={{fontWeight: 600, marginBlock: 0.35, color: (!val  ? "#616161" : "#039be5") }} >
+                                            {device?.name}
+                                        </Typography>
+                                        <Typography variant="button" sx={{fontWeight: 600, color: (!val  ? "#616161" : "#039be5") }} >
+                                            {val ? "On" : "Off"}
+                                        </Typography>
+                                    </Box>
+                                </Paper>
+                            </Grid>
+                        ) 
+                }) : (
+                    <></>
+                )
+            }
+            </Grid>
+            </Box>
+        
+
+
+            {/* <Box sx={{ width: '100%' }}>
                 { isHomeDataPending ?  <>Loading .....</> 
                 : <Grid container spacing={2} columnGap={0}>
                     <Grid item xs={12} sx={{display: "flex", alignItems: "center"}}>
@@ -170,7 +330,7 @@ function UserDashboard() {
                 </Grid>
             }
                 
-            </Box>
+            </Box> */}
         </Container>
     </>
   );

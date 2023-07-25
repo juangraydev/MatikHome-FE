@@ -65,6 +65,7 @@ import {
 } from '.././../../../modules/user/dashboard/store/actionCreators'
 
 import HomeSetting  from '../../homeSetting';
+import DeviceSetting from '../../deviceSetting';
 
 import AddHome  from '../../addComponents/AddHome';
 
@@ -80,6 +81,7 @@ function Content (props) {
     const [anchorElResponse, setAnchorElResponse] = React.useState(null);
 
     const [openHome, setOpenHome] = React.useState(false);
+    const [openDevice, setOpenDevice] = React.useState(false);
     
     const [openAddHome, setOpenAddHome] = React.useState(false);
     
@@ -176,6 +178,9 @@ function Content (props) {
         setOpenAddHome(false)
     }
 
+    const handleOpenDeviceSetting = () => setOpenDevice(true);
+    const handleCloseDeviceSetting = () => setOpenDevice(false);
+
     const drawer = (
         <div key={"drawer"}>
         <Toolbar sx={{background: "#00062A"}}>
@@ -252,7 +257,7 @@ function Content (props) {
                     <ListItemText primary={'Home Settings'} />
                 </ListItemButton>
             </ListItem>
-            <ListItem key={'device_settings'} disablePadding>
+            <ListItem key={'device_settings'} disablePadding onClick={handleOpenDeviceSetting}>
                 <ListItemButton>
                     <ListItemIcon sx={{minWidth: '35px', color: "#039be5"}}>
                         <DevicesOtherIcon />
@@ -305,6 +310,11 @@ function Content (props) {
                 key={"home_setting"}
                 open={openHome}
                 handleClose={handleCloseHomeSetting}
+            />
+            <DeviceSetting
+                key={"device_setting"}
+                open={openDevice}
+                handleClose={handleCloseDeviceSetting}
             /> 
             <AddHome
                 key={"add_home"}

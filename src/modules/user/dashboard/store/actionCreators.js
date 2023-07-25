@@ -42,3 +42,27 @@ export function selectRoom(data) {
         payload: data
     }
 }
+
+
+
+export function fetchHomeDevice() {
+    return {
+        type: types.FETCH_HOME_DEVICE
+    }
+}
+
+// return success status
+export function successHomeDevice(data) {
+    return {
+        type: types.SUCCESS_HOME_DEVICE,
+        payload: data
+    }
+}
+
+// return fail status
+export function failHomeDevice(error) {
+    return {
+        type: types.FAIL_HOME_DEVICE,
+        payload: error
+    }
+}

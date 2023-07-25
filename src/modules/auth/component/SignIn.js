@@ -1,10 +1,3 @@
-// import LoginComponent from "./login/index";
-// import RegisterComponent from "./register/index";
-
-
-// export const Login = LoginComponent
-// export const Register = RegisterComponent
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -31,7 +24,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 
 import "./style.css"
 
-function LoginPage() {
+export default function SignInPage() {
 	const navigate  = useNavigate();
 	const dispatch = useDispatch()
     const [formData, setFormData] = React.useState({})
@@ -137,5 +130,3 @@ function LoginPage() {
 		</Container>
   );
 }
-
-export default LoginPage;
