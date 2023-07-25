@@ -24,7 +24,8 @@
     "uuid": "^9.0.0",
     "uuidv4": "^6.2.13",
     "webfontloader": "^1.6.28",
-    "websocket": "^1.0.34"
+    "websocket": "^1.0.34",
+    "yup": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts --max_old_space_size=4096 start",
