@@ -44,7 +44,7 @@ Http.interceptors.response.use(
 		return response
 	},
 	function (error) {
-		const status = error.response.status
+		const status = error.response.status || "";
 		let message = ''
 		//This block triggers when backend returns the expected error message structure
 		let resp_data = error.response.data
