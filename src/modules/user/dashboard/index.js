@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 import {
 	Container,
 	Box,
@@ -34,6 +35,8 @@ import SingleBedIcon from '@mui/icons-material/SingleBed';
 import GarageIcon from '@mui/icons-material/Garage';
 import BusinessIcon from '@mui/icons-material/Business';
 import DevicesOtherIcon from '@mui/icons-material/DevicesOther';
+
+import { io } from 'socket.io-client';
 
 
 
@@ -88,8 +91,10 @@ function UserDashboard() {
     // [WebSocket QUERY]
     React.useEffect(() => {
         if(isNaN(selectedHome) && isNaN(selectedRoom) ){
-            const url = process.env.REACT_APP_WS_URL+ selectedHome?.id +'/';
-            setClient(new W3CWebSocket(url))
+            // const url = 'wss://matikhome-be-production.up.railway.app/ws/'+ selectedHome?.id +'/';
+            // let server = new W3CWebSocket(url)
+            const socket = io("https://matikhomews-production.up.railway.app/");
+            setClient(socket)
         }
     }, [selectedHome])
 
@@ -97,24 +102,41 @@ function UserDashboard() {
     // [WebSocket Functions]
     React.useEffect(()=>{
         if(client){
-            client.onopen = () => {
-                console.log("[WebSocket] client open");
-            };
+            // client-side
+
+            console.log("wss", selectedHome);
+            client.on("connect", () => {
+                console.log("connect",client.id); // x8WIv7-mJelg7on_ALbx
+                client.emit("home_devices", selectedHome?.id)
+            });
+
+            client.on("home_devices", (res) => {
+                console.log("home devices", res); 
+                console.log("[WebSocket] deviceStatus", res);
+                setDevices(res)
+            });
+            
+            client.on("disconnect", () => {
+                console.log("disconnect",client.id); // undefined
+            });
+            // client.onopen = () => {
+            //     console.log("[WebSocket] client open");
+            // };
     
-            client.onmessage = (message) => {
-                const dataFromServer = JSON.parse(message.data);
-                setDevices(dataFromServer?.deviceStatus)
-                console.log("[WebSocket] deviceStatus", dataFromServer);
-            };
+            // client.onmessage = (message) => {
+            //     const dataFromServer = JSON.parse(message.data);
+            //     setDevices(dataFromServer?.deviceStatus)
+            //     console.log("[WebSocket] deviceStatus", dataFromServer);
+            // };
     
-            client.onclose = () => {
-                console.log("[WebSocket] client close");
-            };
+            // client.onclose = () => {
+            //     console.log("[WebSocket] client close");
+            // };
         }
     }, [client])
 
     const handleClickChannel = (id, status) => {
-        client.send(JSON.stringify({
+        client.emit("channel", selectedHome?.id, JSON.stringify({
             'type': "deviceInfo",
             "channelId": id,
             "status": status
