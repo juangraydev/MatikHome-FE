@@ -54,7 +54,7 @@ export default function AuthPage() {
     });
 
 
-    const LoginAPI = (data) => {
+    const LoginAPI = async(data) => {
         dispatch(loginAPI(data))
             .then(()=>{
                 if(localStorage.getItem("TOKEN")){
@@ -66,13 +66,18 @@ export default function AuthPage() {
                     }
                 }
             })
+            .catch(()=>{
+                console.log('[Auth][Login][Error]');
+            })
+
     }
 
     const RegisterAPI = (data) => {
+        console.log('[Register]', data);
         dispatch(registerAPI(data)).then(()=>{
             if(localStorage.getItem("TOKEN")){
                 var decoded = jwt_decode(localStorage.getItem("TOKEN"));
-                if(decoded?.role == 1){
+                if(decoded?.role === 1){
                     navigate("/admin");
                 }else{
                     navigate("/dashboard");
@@ -118,6 +123,7 @@ export default function AuthPage() {
                         setTimeout(() => {
                             let data = _.cloneDeep(values);
                             data.password = jwtEncode({"password": data.password}, "matik_home")
+                            data.role = 0
                             if(pageType){
                                 LoginAPI(data)
                             }else {

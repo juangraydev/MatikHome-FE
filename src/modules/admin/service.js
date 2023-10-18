@@ -21,7 +21,7 @@ export const getAdminSummary = () => async dispatch => {
 
 export const getHomesAPI = () => {
     return new Promise( async (resolve, reject) => {
-        return Http.get(process.env.REACT_APP_API_HOUSE_LIST)
+        return Http.get(process.env.REACT_APP_API_ADMIN_HOUSE_LIST)
             .then((res) => {
                 resolve(res?.data?.body?.data)
             })
@@ -45,7 +45,7 @@ export const getDeviceAPI = () => {
 
 export const getUsersAPI = () => {
     return new Promise( async (resolve, reject) => {
-        return Http.get(process.env.REACT_APP_API_USER_LIST)
+        return Http.get(process.env.REACT_APP_API_ADMIN_USER_LIST)
             .then((res) => {
                 resolve(res?.data?.body?.data)
             })

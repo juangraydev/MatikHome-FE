@@ -22,8 +22,9 @@ export const loginAPI = (data) => async dispatch => {
                 
             })
             .catch(error => {
+                // debugger
                 dispatch(failUserData(error));
-		        store.dispatch(showMessage('error', "Incorrect username or password"))
+		        // store.dispatch(showMessage('error', "Incorrect username or password"))
                 reject(error)
             })
     })
@@ -39,8 +40,9 @@ export const registerAPI = (data)  => async dispatch => {
                 resolve(response.data.body?.data?.token)
             })
             .catch(error => {
-		        store.dispatch(showMessage('error', "Something when wrong. Contact the administrator"))
-                reject(error)
+                console.log("[Register][Error]");
+		        // store.dispatch(showMessage('error', "Something when wrong. Contact the administrator"))
+                // reject(error)
             })
     })
 }

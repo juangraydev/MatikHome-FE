@@ -1,6 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import { UserDashboard } from "../modules/user";
+import { UserDashboard, UserHomeSetting, UserHomeMember} from "../modules/user";
 import  Admin  from "../modules/admin/index";
+import AdminSummary from '../modules/admin/module/Dashboard'
+import AdminUserManagement from '../modules/admin/module/UserManagement'
+import AdminDeviceManagement from '../modules/admin/module/DeviceManagement'
+import AdminHomeManagement from '../modules/admin/module/HomeManagement'
 
 import AuthPage from "../modules/auth/index";
 
@@ -16,7 +20,14 @@ function Router() {
 
           {/** User pages */}
           <Route path="/dashboard" element={<UserDashboard/>}></Route>
-          <Route path="/admin" element={<Admin/>}></Route>
+          <Route path="/dashboard/home-setting" element={<UserHomeSetting/>}></Route>
+          <Route path="/home/member" element={<UserHomeMember/>}></Route>
+
+          <Route path="/admin" element={<AdminSummary/>}></Route>
+          <Route path="/admin/summary" element={<AdminSummary/>}></Route>
+          <Route path="/admin/user" element={<AdminUserManagement/>}></Route>
+          <Route path="/admin/device" element={<AdminDeviceManagement/>}></Route>
+          <Route path="/admin/home" element={<AdminHomeManagement/>}></Route>
 
 
           {/* <Route path="/admin/device-management" element={<Admin/>}></Route>

@@ -28,6 +28,8 @@ import {
     selectRoom
 } from '.././../modules/user/dashboard/store/actionCreators'
 
+import AddHome from '../components/addComponents/AddHome'
+
 export default function UserLayout () {
 	const dispatch = useDispatch()
     const [anchorElHome, setAnchorElHome] = React.useState(null);
@@ -76,6 +78,10 @@ export default function UserLayout () {
 
     return (
         <React.Fragment>
+            {openAddHome ?? <AddHome open={true} type="add" />}
+
+
+
             {/* Home Dropdown */}
             <List>
                 <ListItem 
@@ -87,7 +93,7 @@ export default function UserLayout () {
                     aria-haspopup="true"
                 >
                     <ListItemButton sx={{paddingInline: 0}}>
-                        <Box component="div" sx={{width: '-webkit-fill-available',  display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                        <Box component="div" sx={{ color: '#fff', width: '-webkit-fill-available',  display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                             <Typography variant="h5" sx={{paddingInline: 2, fontWeight: 600}}>{  selectedHome?.name.charAt(0).toUpperCase() + selectedHome?.name.slice(1) }</Typography>
                             <ExpandMoreIcon sx={{marginInline: 2}}/>
                         </Box>
@@ -121,7 +127,7 @@ export default function UserLayout () {
                     {
                         homes?.map((home,idx) => (
                             <MenuItem key={idx} onClick={()=>{handleSelectedHome(home)}}>
-                                <Typography sx={{color: selectedHome?.name == home?.name ? "#039be5" : "inherit"}} textAlign="center">{home?.name}</Typography>
+                                <Typography sx={{color: selectedHome?.name === home?.name ? "#039be5" : "inherit"}} textAlign="center">{home?.name}</Typography>
                             </MenuItem>
                         ))
                     }
@@ -131,20 +137,20 @@ export default function UserLayout () {
                         <ListItemIcon sx={{minWidth: '35px', color: "#039be5"}}>
                             <HomeIcon />
                         </ListItemIcon>
-                        <ListItemText primary={'Home'} sx={{color: (selectedRoom == "ALL"  ? "#039be5" : "rgba(0, 0, 0, 0.87)")}}/>
+                        <ListItemText primary={'Home'} sx={{color: (selectedRoom === "ALL"  ? "#039be5" : "#fff")}}/>
                     </ListItemButton>
                 </ListItem>
                 <ListItem key={'home_settings'} disablePadding onClick={handleOpenHomeSetting}>
-                    <ListItemButton>
-                        <ListItemIcon sx={{minWidth: '35px', color: "#039be5"}}>
+                    <ListItemButton sx={{color: '#fff'}}>
+                        <ListItemIcon sx={{minWidth: '35px', color: 'inherit'}}>
                             <ViewQuiltIcon />
                         </ListItemIcon>
                         <ListItemText primary={'Home Settings'} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem key={'device_settings'} disablePadding onClick={handleOpenDeviceSetting}>
-                    <ListItemButton>
-                        <ListItemIcon sx={{minWidth: '35px', color: "#039be5"}}>
+                    <ListItemButton sx={{color: '#fff'}}>
+                        <ListItemIcon sx={{minWidth: '35px', color: 'inherit'}}>
                             <DevicesOtherIcon />
                         </ListItemIcon>
                         <ListItemText primary={'Device Settings'} />
@@ -152,7 +158,7 @@ export default function UserLayout () {
                 </ListItem>
             </List>
             <Divider />
-            <Typography sx={{fontSize: '16px', paddingInline: 2, marginTop: 2, fontWeight: 600}}>{'Rooms'}</Typography>
+            <Typography sx={{color: '#fff', fontSize: '16px', paddingInline: 2, marginTop: 2, fontWeight: 600}}>{'Rooms'}</Typography>
             <List sx={{maxHeight: 'calc(48px * 5)', overflow: 'auto'}}>
                 {selectedHome?.rooms.map((room, index) => (
                 <ListItem key={room?.name} disablePadding onClick={()=>handleSelectRoom(room?.id)}>

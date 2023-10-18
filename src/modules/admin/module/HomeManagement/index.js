@@ -24,16 +24,16 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AdminTable from '../component/Table';
 // import CreateDialog from './component/create-device-dialog';
 
+import * as Yup from 'yup';
 import { getHomeList } from './store/service'
 
 
 const columns = [
-    {label: 'Nickname', data: 'name', align: 'left', width: '25%'},
-    {label: 'Address', data: 'address', align: 'left', width: '25%'},
-    {label: 'Rooms', data: 'rooms', align: 'left', width: '15%'},
-    {label: 'Members', data: 'members', align: 'left', width: '15%'},
-    {label: 'Devices', data: 'devices', align: 'left', width: '15%'},
-    {label: '', data: 'menu', align: 'right', width: '5%'},
+    {label: 'Nickname', data: 'name', value: 'name', fieldType: 'text', align: 'left', width: '25%'},
+    {label: 'Address', data: 'address', value: 'address', fieldType: 'text', align: 'left', width: '30%'},
+    {label: 'Members', data: 'members', value: 'members', fieldType: 'member', align: 'left', width: '15%'},
+    {label: 'Rooms', data: 'rooms', value: 'rooms', fieldType: 'room', align: 'left', width: '15%'},
+    {label: 'Devices', data: 'devices', value: 'devices', fieldType: 'device', align: 'left', width: '15%'},
 ]
 
 export default function HomeManagement() {
@@ -42,15 +42,40 @@ export default function HomeManagement() {
     const [createDialog, setCreateDialog] = React.useState(false)
 	const [rows, setRows] = React.useState([])
 
+    const validationSchema = Yup.object().shape({
+        name: Yup.string('')
+            .max(50, 'Exceed from max 50 characters.')
+            .required('This Field is Required!'),
+        address: Yup.string()
+            .max(50, 'Exceed from max 50 characters.')
+            .required('This Field is Required!'),
+        rooms: Yup.array()
+            .of(
+                Yup.object()
+                    .shape({
+                        type: Yup.string().required('This field is required!'),
+                        name: Yup.string().required('This field is required!')
+                    })
+            ),
+        devices: Yup.array()
+            .of(
+                Yup.string()
+                    .required()
+            )
+        // members: Yup.array()
+        //     .Yup.object()
+        //         .Yup.shape({
+        //             id: Yup.string(),
+        //             name: Yup.string()
+        //         }),
+        // devices: Yup.string()
+        //     .required('This Field is Required!'),
+    });
+
     React.useEffect(()=>{
 		getHomeList()
 			.then((res) => {
 				setRows(res);
-                // setRows([
-                //     {name: 'Home 1', address: 'Address 1', rooms: [1,2,3,4,5], members: [2,3,1], devices: [1]},
-                //     {name: 'Home 2', address: 'Address 2', rooms: [1,2,3], members: [2], devices: [2,3]},
-                //     {name: 'Home 3', address: 'Address 3', rooms: [4,5], members: [1,2,3,4], devices: [4,2,1]},
-                // ])
                 console.log("[Retrived][Admin][Home]: ",res);
 			})
 			.catch(() => {
@@ -58,27 +83,29 @@ export default function HomeManagement() {
 			})
 	}, [])
 
+    const onAdd = () => {
 
-    const toggleCreateDialog = () => {
-        setCreateDialog(!createDialog)
+    }
+
+    const onEdit = () => {
+
+    }
+    
+    const onDelete = () => {
+
     }
     
     return (
     <Box component="Paper" >
-        {
-            // createDialog && <CreateDialog open={true} handleClose={toggleCreateDialog}/>
-        }
-        <Box component={"div"} sx={{display: "flex", justifyContent: "space-between", alignContent: "center"}}>
-            <Typography variant='menu'>
-                Home list
-            </Typography>
-            <IconButton size="small" sx={{color: "#039be5", marginInline: 1}} onClick={toggleCreateDialog}>
-                <AddCircleOutlineOutlinedIcon/>
-            </IconButton>
-        </Box>
         <AdminTable
             columns={columns || []}
             rows={rows || []}
+            title={'Home Management'}
+            modalTitle={'User'}
+            validationSchema={validationSchema}
+            onAdd={onAdd}
+            onEdit={onEdit}
+            onDelete={onDelete}
         />
     </Box>
   );

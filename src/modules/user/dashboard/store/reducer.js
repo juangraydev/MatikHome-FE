@@ -30,6 +30,7 @@ export default function reducer(state = initialState, action) {
                 isPending: true,
             };
         case types.SUCCESS_HOME_DATA:
+            console.log("[reducer]", payload);
             return {
                 ...state,
                 isPending: false,
