@@ -28,6 +28,7 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import _ from 'lodash'
 import FormDialog from './CustomDialog';
+import CreateHomeDialog from './CreateHomeDialog'
 import ConfirmModal from '../../../../shared/components/modal/ConfirmModal';
 // import { getDeviceAPI } from '../../service'
 
@@ -158,10 +159,11 @@ export default function AdminTable({
     
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
+
     return (
     <Box component="Paper">
         {
-            dialogOpen && 
+            dialogOpen && modalTitle !== 'Home' &&
             <FormDialog 
                 open={true} 
                 handleClose={handleCloseDialog} 
@@ -174,6 +176,23 @@ export default function AdminTable({
                 onEdit={handleOnEdit}
             />
         }
+
+        { 
+            dialogOpen && modalTitle === 'Home' &&
+            <CreateHomeDialog 
+                open={true} 
+                handleClose={handleCloseDialog} 
+                title={modalTitle} 
+                type={dialogType} 
+                fields={columns}
+                selected={tableRows.filter((row) => row.id === selected[0])[0]}
+                validationSchema={validationSchema}
+                onAdd={handleOnAdd}
+                onEdit={handleOnEdit}
+            />
+        }
+
+
 
         {
             confirmOpen &&

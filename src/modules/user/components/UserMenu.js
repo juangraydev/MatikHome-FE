@@ -81,7 +81,7 @@ export default function UserLayout () {
 
     const handleSelectRoom = (id) => {
 		dispatch(selectRoom(id.replaceAll("-",""))) 
-		if(location.pathname !== "/dashboard"){
+		if(location.pathname !== "/dashboard" || location.pathname !== "/dashboard/home-setting"){
 			navigate('/dashboard')
 		}
         handleDrawerToggle()
@@ -257,52 +257,6 @@ export default function UserLayout () {
 									selectedRoom === "home-setting" ? "#039be5" : "#fff",
 							}}
 						/>
-					</ListItemButton>
-				</ListItem>
-
-				<ListItem
-					key={"home-member"}
-					disablePadding
-					onClick={() => handleOpenHomeMember()}
-				>
-					<ListItemButton
-						selected={selectedRoom === "home-member"}
-						sx={{
-							minWidth: "35px",
-							// color: selectedRoom === room?.id.replaceAll("-","") ? "#039be5" : "#fff",
-						}}
-					>
-						<ListItemIcon
-							sx={{ minWidth: "35px", color: "inherit" }}
-						>
-							<ViewQuiltIcon
-								sx={{ color: selectedRoom ==="home-member"
-									? "#039be5"
-									: "#fff" }}
-							/>
-						</ListItemIcon>
-						<ListItemText
-							primary={"Home Access"}
-							sx={{
-								color:
-									selectedRoom === "home-member" ? "#039be5" : "#fff",
-							}}
-						/>
-					</ListItemButton>
-				</ListItem>
-
-				<ListItem
-					key={"device_settings"}
-					disablePadding
-					onClick={handleOpenDeviceSetting}
-				>
-					<ListItemButton sx={{ color: "#fff" }}>
-						<ListItemIcon
-							sx={{ minWidth: "35px", color: "inherit" }}
-						>
-							<DevicesOtherIcon />
-						</ListItemIcon>
-						<ListItemText primary={"Device Settings"} />
 					</ListItemButton>
 				</ListItem>
 

@@ -33,6 +33,7 @@ export const addUser = (data)  => async dispatch => {
         return Http.post(process.env.REACT_APP_API_ADMIN_USER_LIST, data)
             .then(response => {
                 resolve(response.data.body?.data)
+		        store.dispatch(showMessage('success', "User created successfully"))
             })
             .catch(error => {
 		        store.dispatch(showMessage('error', "Something when wrong. Contact the administrator"))
@@ -46,6 +47,7 @@ export const editUser = (data)  => async dispatch => {
         return Http.put(process.env.REACT_APP_API_ADMIN_USER_LIST, data)
             .then(response => {
                 resolve(response.data.body?.data)
+		        store.dispatch(showMessage('success', "User updated successfully"))
             })
             .catch(error => {
 		        store.dispatch(showMessage('error', "Something when wrong. Contact the administrator"))
@@ -60,8 +62,10 @@ export const deleteUser = (id) => {
         return Http.delete(process.env.REACT_APP_API_ADMIN_USER_LIST+id+"/")
             .then((res) => {
                 resolve(res)
+		        store.dispatch(showMessage('success', "User Delete successfully"))
             })
             .catch((err) => {
+		        store.dispatch(showMessage('error', "Something when wrong. Contact the administrator"))
                 reject(err)
             })
     })

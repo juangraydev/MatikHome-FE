@@ -114,3 +114,91 @@ export const deviceList = (home_id) => async dispatch => {
         })
     
 }
+
+export const addDevice = (home_id, data) => async dispatch => {
+    
+    return new Promise(async (resolve, reject) => {
+        return Http.post(process.env.REACT_APP_API_DEVICE_LIST +`${home_id}/`, data)
+            .then(response => {
+                dispatch(homeList())
+		        store.dispatch(showMessage('success', "Device Added Successfully"))
+                resolve();
+            })
+            .catch(error => {
+                reject()
+            })
+    })
+}
+
+export const deleteDevice = (home_id, key) => async dispatch => {
+    return new Promise(async (resolve, reject) => {
+        return Http.delete(process.env.REACT_APP_API_DEVICE_LIST +`${home_id}/${key}/`)
+            .then(response => {
+                dispatch(homeList())
+		        store.dispatch(showMessage('success', "Device Removed Successfully"))
+                resolve();
+            })
+            .catch(error => {
+                reject()
+            })
+    })
+}
+
+export const updateChannel = (id, data) => async dispatch => {
+    return new Promise(async (resolve, reject) => {
+        return Http.put(process.env.REACT_APP_API_DEVICE_LIST +`channel/${id}/`, data)
+            .then(response => {
+                dispatch(homeList())
+		        store.dispatch(showMessage('success', "Device Channel Updated Successfully"))
+                resolve();
+            })
+            .catch(error => {
+                reject()
+            })
+    })
+}
+
+
+export const inviteUser = (home, data) => async dispatch => {
+    return new Promise(async (resolve, reject) => {
+        return Http.post(process.env.REACT_APP_API_HOUSE_LIST +`user/` + String(home?.id) +'/', data)
+            .then(response => {
+                dispatch(homeList())
+		        store.dispatch(showMessage('success', "User Invited Successfully"))
+                resolve(response);
+            })
+            .catch(error => {
+                console.log("[Error]", error);
+                reject(error)
+            })
+    })
+}
+
+export const updateUser = (home, data) => async dispatch => {
+    return new Promise(async (resolve, reject) => {
+        return Http.put(process.env.REACT_APP_API_HOUSE_LIST +`user/` + String(home?.id) +'/', data)
+            .then(response => {
+                dispatch(homeList())
+		        store.dispatch(showMessage('success', "User Invited Successfully"))
+                resolve(response);
+            })
+            .catch(error => {
+                console.log("[Error]", error);
+                reject(error)
+            })
+    })
+}
+
+export const removeMember = (home_id, member_id) => async dispatch => {
+    return new Promise(async (resolve, reject) => {
+        return Http.delete(process.env.REACT_APP_API_HOUSE_LIST +`${home_id}/user/${member_id}`)
+            .then(response => {
+                dispatch(homeList())
+		        store.dispatch(showMessage('success', "Room Deleted Successfully"))
+                resolve();
+            })
+            .catch(error => {
+                reject()
+            })
+    })
+}

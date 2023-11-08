@@ -5,6 +5,7 @@ import AdminSummary from '../modules/admin/module/Dashboard'
 import AdminUserManagement from '../modules/admin/module/UserManagement'
 import AdminDeviceManagement from '../modules/admin/module/DeviceManagement'
 import AdminHomeManagement from '../modules/admin/module/HomeManagement'
+import AdminHomeEdit from '../modules/admin/module/EditHomeComponent'
 
 import AuthPage from "../modules/auth/index";
 
@@ -28,6 +29,7 @@ function Router() {
           <Route path="/admin/user" element={<AdminUserManagement/>}></Route>
           <Route path="/admin/device" element={<AdminDeviceManagement/>}></Route>
           <Route path="/admin/home" element={<AdminHomeManagement/>}></Route>
+          <Route path="/admin/home/edit" element={<AdminHomeEdit/>}></Route>
 
 
           {/* <Route path="/admin/device-management" element={<Admin/>}></Route>

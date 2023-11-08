@@ -79,22 +79,6 @@ export default function FormDialog({
                 }
             }
         })
-        // validationSchema && validationSchema?._nodes?.map((item) => {
-        //     console.log("selected[item]", selected, item);
-        //     temp[item] = ''
-        //     if(item === 'key'){
-        //         temp[item] = generateUuid()
-        //     }
-
-        //     if(type === 'edit'){
-        //         temp[item] = selected[item]
-        //         if(item === 'home'){
-        //             temp[item] = selected[item]
-        //         }
-        //     }
-        // })
-
-        // console.log("init temp",temp);
         setInitVal(temp)
     }, [validationSchema])
 
@@ -317,10 +301,6 @@ export default function FormDialog({
                     )
                 }}
             </Formik>
-
-
-            
-            
     </Dialog>
     );
 }

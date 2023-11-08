@@ -38,10 +38,10 @@ import {
   AccordionSummary 
 } from "@mui/material";
 
-import { editHome, inviteUser, updateUser, removeMember, addDevice, deleteDevice, updateChannel } from "../dashboard/service";
+import { editHome, inviteUser, updateUser, removeMember, addDevice, deleteDevice, updateChannel } from "../../../user/dashboard/service";
 
 import CloseIcon from "@mui/icons-material/Close";
-import { selectHome, selectRoom } from "../dashboard/store/actionCreators";
+import { selectHome, selectRoom } from "../../../user/dashboard/store/actionCreators";
 import _ from "lodash";
 import {
   Add,
@@ -59,7 +59,7 @@ import {
   Troubleshoot,
   Update,
 } from "@mui/icons-material";
-import LetterAvatar from "../../../shared/components/avatar";
+// import LetterAvatar from "../../../shared/components/avatar";
 import Fade from "@mui/material/Fade";
 import FormHelperText from "@mui/material/FormHelperText";
 
@@ -76,7 +76,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { useSelector, useDispatch } from "react-redux";
-import { addRoom, editRoom, deleteRoom } from "../dashboard/service";
+import { addRoom, editRoom, deleteRoom } from "../../../user/dashboard/service";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 

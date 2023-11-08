@@ -76,6 +76,7 @@ export default function AuthPage() {
         console.log('[Register]', data);
         dispatch(registerAPI(data)).then(()=>{
             if(localStorage.getItem("TOKEN")){
+                console.log("TOKEN",localStorage.getItem("TOKEN"));
                 var decoded = jwt_decode(localStorage.getItem("TOKEN"));
                 if(decoded?.role === 1){
                     navigate("/admin");

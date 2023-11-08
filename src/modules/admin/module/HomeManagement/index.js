@@ -25,7 +25,8 @@ import AdminTable from '../component/Table';
 // import CreateDialog from './component/create-device-dialog';
 
 import * as Yup from 'yup';
-import { getHomeList } from './store/service'
+import { getHomeList, addHome, deleteHome } from './store/service'
+import { useDispatch } from 'react-redux';
 
 
 const columns = [
@@ -37,6 +38,7 @@ const columns = [
 ]
 
 export default function HomeManagement() {
+    const dispatch = useDispatch
 	const navigate  = useNavigate();
     
     const [createDialog, setCreateDialog] = React.useState(false)
@@ -83,16 +85,42 @@ export default function HomeManagement() {
 			})
 	}, [])
 
-    const onAdd = () => {
-
+    const onAdd = (data) => {
+        addHome(data)
+            .then(async (res)=>{
+                await getHomeList()
+                .then((res) => {
+                    setRows(res);
+                    console.log("[Retrived][Admin][Home]: ",res);
+                })
+                .catch(() => {
+                    setRows([])
+                })
+            })
+            .catch((err)=>{
+                console.log("[add home error]", err);
+            })
     }
 
     const onEdit = () => {
-
+        
     }
     
-    const onDelete = () => {
+    const onDelete = (id) => {
+        deleteHome(id)
+            .then(async (res)=>{
+                await getHomeList()
+                    .then((res) => {
+                        setRows(res);
+                        console.log("[Retrived][Admin][Home]: ",res);
+                    })
+                    .catch(() => {
+                        setRows([])
+                    })
+            })
+            .catch((err)=>{
 
+            })
     }
     
     return (
@@ -101,7 +129,7 @@ export default function HomeManagement() {
             columns={columns || []}
             rows={rows || []}
             title={'Home Management'}
-            modalTitle={'User'}
+            modalTitle={'Home'}
             validationSchema={validationSchema}
             onAdd={onAdd}
             onEdit={onEdit}

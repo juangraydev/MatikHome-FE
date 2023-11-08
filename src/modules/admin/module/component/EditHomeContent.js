@@ -92,7 +92,7 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
   const dispatch = useDispatch();
   // const [anchorElDashboardMenu, setAnchorElDashboardMenu] = React.useState(null);
   const [genInfoEdit, setGenInfoEdit] = React.useState(null);
-  const [home, setHome] = React.useState({});
+  const [home, setHome] = React.useState({name: "", address: ""});
   const [roomModal, setRoomModal] = React.useState(null); //Add and edit room modal
   const [roomDeleteModal, setRoomDeleteModal] = React.useState(null); //Delete Room Modal
   const [memberModal, setInviteModal] = React.useState(null);
@@ -217,6 +217,8 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
     setMemberModalData(data)
   };
 
+  console.log("[Edited Home]", home);
+
   return (
     <Box id="main" sx={style}>
       <Box id="wrapper">
@@ -306,7 +308,7 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
                           autoFocus
                           // onBlur={handleSubmit}
                           onChange={handleChange}
-                          value={values.name}
+                          value={values?.name}
                           error={touched?.name && errors?.name}
                         />
                         <FormHelperText error={touched?.name && errors?.name}>

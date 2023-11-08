@@ -69,16 +69,12 @@ function UserDashboard() {
                 let tempHome = homeData.filter(home => {
                     return home?.id === selectedHome?.id
                 })
-
-                console.log("tempHome",tempHome[0]);
-                
                 dispatch(selectHome(tempHome[0]))
             }
             // dispatch(selectRoom("ALL")) 
         }
     },[homeData])
 
-	console.log("[homeData]", isHomeDataPending);
 
     //SET ROOMS TO COMPONENT STATE
     React.useEffect(()=>{
