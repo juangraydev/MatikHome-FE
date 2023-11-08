@@ -97,6 +97,8 @@ function UserDashboard() {
     React.useEffect(()=>{
         if(client){
             // client-side
+			
+			console.log("[home_device]", selectedHome?.id);
             client.on("connect", () => {
                 client.emit("home_devices", selectedHome?.id)
             });
