@@ -115,6 +115,22 @@ export const deviceList = (home_id) => async dispatch => {
     
 }
 
+export const retrieveTempDevice = (home_id) => async dispatch => {
+    dispatch(failHomeDevice())
+    return new Promise(async (resolve, reject) => {
+        return Http.get(process.env.REACT_APP_API_DEVICE_LIST+`temp/${home_id}/`)
+        .then(response => {
+            // dispatch(successHomeDevice(response.data.body?.data))
+            resolve(response.data.body?.data)
+        })
+        .catch(error => {
+            dispatch(failHomeDevice(error))
+            reject(error)
+        })
+    })
+    
+}
+
 export const addDevice = (home_id, data) => async dispatch => {
     
     return new Promise(async (resolve, reject) => {

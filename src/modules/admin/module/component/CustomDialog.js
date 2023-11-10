@@ -49,8 +49,6 @@ export default function FormDialog({
         validationSchema.fields && Object.keys(validationSchema?.fields)?.map((item) => {
             console.log("[Key]", validationSchema?.fields[item]['type'], item);
             temp[item] = ''
-            
-
             if(type === 'edit'){
                 temp[item] = selected[item]
                 if(item === 'home'){
@@ -214,6 +212,10 @@ export default function FormDialog({
                                                     />
 
                                         case 'pulldown':
+                                            if(field.label === 'Channels' && values['device_type'] === 1){
+                                               values['channel'] = 2;
+                                            }
+                                            
                                             return <TextField
                                                         select
                                                         margin="dense"
@@ -229,7 +231,8 @@ export default function FormDialog({
                                                         variant="standard"
                                                         sx={{
                                                             marginTop: 0,
-                                                            maxWidth: '100%'
+                                                            maxWidth: '100%',
+                                                            display: field.label === 'Channels' && values['device_type'] === 1 ? 'none' : 'block'
                                                         }}
                                                     >
                                                         {

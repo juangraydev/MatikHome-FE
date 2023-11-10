@@ -17,7 +17,7 @@ import {
 import Modal from "../../../shared/components/modal/index"
 // import Grid from '@mui/material/Unstable_Grid2';
 import TungstenIcon from '@mui/icons-material/Tungsten';
-import { homeList } from "./service";
+import { homeList, retrieveTempDevice } from "./service";
 import GeneralSetting from "../component/GeneralSetting"
 import { useSelector, useDispatch } from 'react-redux'
 import { 
@@ -35,6 +35,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import DevicesOtherIcon from '@mui/icons-material/DevicesOther';
 
 import { io } from 'socket.io-client';
+import _ from "lodash";
 
 
 
@@ -80,6 +81,16 @@ function UserDashboard() {
     React.useEffect(()=>{
         if(selectedHome) {
             setRooms(selectedHome['rooms'])
+			setInterval(function() {
+				console.log("This message will appear every 2 seconds!");
+				dispatch(retrieveTempDevice(selectedHome?.id))
+					.then((res)=>{
+						console.log("[temp]ss", res[0].status, res[1].status);
+					})
+					.catch((err)=>{
+						console.log("[temp][err]", err);
+					})
+			}, 2000);
         }
         
     },[selectedHome])
@@ -114,6 +125,8 @@ function UserDashboard() {
         }
     }, [client])
 
+
+
     const handleClickChannel = (id, status) => {
         client.emit("channel", selectedHome?.id, JSON.stringify({
             'type': "deviceInfo",
@@ -130,7 +143,7 @@ function UserDashboard() {
         dispatch(selectRoom(event.target.id.replaceAll("-","")))
     }
 
-	// console.log("[selectedRoom]", selectedHome?.rooms.filter((room) => room?.id.replaceAll("-","") === selectedRoom)[0]);
+	console.log("[selectedRoom]", selectedRoom);
 
 	const roomName = (id) => {
 		return selectedHome?.rooms.filter((room) => room?.id.replaceAll("-","") === id)[0]?.name
@@ -186,78 +199,6 @@ function UserDashboard() {
 						<HomeSetting />
 					</Box>
 				</Box>
-
-				{/* <Box
-					component={"div"}
-					sx={{
-						display: "flex",
-						gap: 1.5,
-						height: 55,
-						overflowX: "auto",
-						scrollPaddingTop: 2,
-					}}
-				>
-					<Button
-						variant="contained"
-						id="ALL"
-						sx={{
-							background:
-								selectedRoom == "ALL" ? "#1976d2" : "#e5e5e5",
-							color: selectedRoom == "ALL" ? "#fff" : "#000",
-							fontSize: "14px",
-							textOverflow: "ellipsis",
-							whiteSpace: "nowrap",
-							overflow: "hidden",
-							minWidth: "fit-content",
-							maxHeight: 36,
-						}}
-						onClick={handleChangeRoom}
-					>
-						All
-					</Button>
-					{rooms &&
-						rooms.map((room) => {
-							console.log("room", room);
-							return (
-								<Button
-									variant="contained"
-									sx={{
-										background:
-											selectedRoom == room?.id
-												? "#1976d2"
-												: "#e5e5e5",
-										color:
-											selectedRoom == room?.id
-												? "#fff"
-												: "#000",
-										fontSize: "14px",
-										textOverflow: "ellipsis",
-										whiteSpace: "nowrap",
-										overflow: "hidden",
-										minWidth: "fit-content",
-										maxHeight: 36,
-										"&:hover": {
-											color: "white",
-										},
-									}}
-									startIcon={
-										{
-											0: <KitchenIcon />,
-											1: <ChairIcon />,
-											2: <SingleBedIcon />,
-											3: <BusinessIcon />,
-											4: <GarageIcon />,
-											default: <ChairIcon />,
-										}[room.type]
-									}
-									id={room?.id}
-									onClick={handleChangeRoom}
-								>
-									{room?.name}
-								</Button>
-							);
-						})}
-				</Box> */}
 				<Box
 					component={"div"}
 					sx={{
@@ -267,8 +208,195 @@ function UserDashboard() {
 						mt: 2,
 					}}
 				>
-					<Grid container spacing={2}>
-						{devices ? (
+					
+					{
+						selectedRoom === "ALL"
+							
+						?<Grid container spacing={2}>
+							{
+								Object.groupBy(devices, device => {return device.room_id;})[null]?.map((device, idx) => {
+									const val = JSON.parse(device.status)?.on;
+									return (
+										<Grid
+											item
+											xs={6}
+											sm={6}
+											md={4}
+											lg={3}
+											xl={2}
+										>
+											<Paper
+												onClick={() =>
+													handleClickChannel(
+														device.id,
+														!val,
+													)
+												}
+												sx={{
+													backgroundColor: !val
+														? "#e0e0e0"
+														: "white",
+													height: "auto",
+													padding: 2,
+													display: "flex",
+													flexDirection: "column",
+													width: "100%",
+												}}
+											>
+												<TungstenIcon
+													sx={{
+														fontSize: 32,
+														color: !val
+															? "#616161"
+															: "#039be5",
+													}}
+												/>
+												<Box
+													sx={{
+														display: "flex",
+														flexDirection: "column",
+														paddingTop: "10px",
+													}}
+												>
+													<Typography
+														variant="button"
+														gutterBottom
+														sx={{
+															fontWeight: 600,
+															marginBlock: 0.35,
+															color: !val
+																? "#616161"
+																: "#039be5",
+														}}
+													>
+														{device?.name}
+													</Typography>
+													<Typography
+														variant="button"
+														sx={{
+															fontWeight: 600,
+															color: !val
+																? "#616161"
+																: "#039be5",
+														}}
+													>
+														{val ? "On" : "Off"}
+													</Typography>
+												</Box>
+											</Paper>
+										</Grid>
+									);
+								})
+							}
+							{selectedHome && selectedHome?.rooms?.map((room) => {
+								const devicesGroupByRoom = Object.groupBy(devices, device => {
+									return device.room_id;
+								});
+	
+								console.log("[Group Devices]", devicesGroupByRoom[null]);
+								if(!devicesGroupByRoom[room?.id.replaceAll("-", "")]) return <></>
+								return<Grid item spacing={2} xs={12}>
+									<Grid container spacing={2}>
+										<Grid item xs={12}> 
+											<Typography
+												variant="subtitle1"
+												sx={{
+													flexGrow: 1,
+													color: '#808080'
+												}}
+											>
+												{room &&
+													room.name.charAt(0).toUpperCase() +
+													room.name.slice(1)}
+											</Typography>
+										</Grid>
+										{devicesGroupByRoom ? (
+											<>
+												{
+													devicesGroupByRoom[room?.id.replaceAll("-", "")]?.map((device, idx) => {
+														const val = JSON.parse(device.status)?.on;
+														return (
+															<Grid
+																item
+																xs={6}
+																sm={6}
+																md={4}
+																lg={3}
+																xl={2}
+															>
+																<Paper
+																	onClick={() =>
+																		handleClickChannel(
+																			device.id,
+																			!val,
+																		)
+																	}
+																	sx={{
+																		backgroundColor: !val
+																			? "#e0e0e0"
+																			: "white",
+																		height: "auto",
+																		padding: 2,
+																		display: "flex",
+																		flexDirection: "column",
+																		width: "100%",
+																	}}
+																>
+																	<TungstenIcon
+																		sx={{
+																			fontSize: 32,
+																			color: !val
+																				? "#616161"
+																				: "#039be5",
+																		}}
+																	/>
+																	<Box
+																		sx={{
+																			display: "flex",
+																			flexDirection: "column",
+																			paddingTop: "10px",
+																		}}
+																	>
+																		<Typography
+																			variant="button"
+																			gutterBottom
+																			sx={{
+																				fontWeight: 600,
+																				marginBlock: 0.35,
+																				color: !val
+																					? "#616161"
+																					: "#039be5",
+																			}}
+																		>
+																			{device?.name}
+																		</Typography>
+																		<Typography
+																			variant="button"
+																			sx={{
+																				fontWeight: 600,
+																				color: !val
+																					? "#616161"
+																					: "#039be5",
+																			}}
+																		>
+																			{val ? "On" : "Off"}
+																		</Typography>
+																	</Box>
+																</Paper>
+															</Grid>
+														);
+													})
+												}
+											</>
+										) : (
+											<></>
+										)}
+									</Grid>
+								</Grid>
+							})}
+						</Grid>
+						: <Grid container spacing={2}>
+							{devices ? (
 							devices
 								?.filter((device) =>
 									selectedRoom === "ALL"
@@ -351,64 +479,10 @@ function UserDashboard() {
 						) : (
 							<></>
 						)}
-					</Grid>
+
+						</Grid>
+					}
 				</Box>
-
-				{/* <Box sx={{ width: '100%' }}>
-                { isHomeDataPending ?  <>Loading .....</> 
-                : <Grid container spacing={2} columnGap={0}>
-                    <Grid item xs={12} sx={{display: "flex", alignItems: "center"}}>
-                        <Typography variant="button" gutterBottom sx={{fontWeight: 600, marginBlock: 0.35, color: "#757575" }} >
-                        {
-                            ((selectedRoom == "ALL" 
-                                ? selectedHome?.name?.toUpperCase() 
-                                : rooms.filter(room => room?.id == selectedRoom)[0]?.name) + "'s Control Panel")
-                        } 
-                        </Typography>
-                    </Grid>
-                    <>
-                        {
-                            devices 
-                                ? devices.map((device, idx) => {
-                                    const val = JSON.parse(device.status)?.on
-                                    return(
-                                        <Grid item xs={6} sm={6} md={4} lg={2} xl={2}>
-                                            <Paper onClick={()=>handleClickChannel(device.id, !val)} sx={{
-                                                backgroundColor: (!val ? "#e0e0e0" : "white"),
-                                                height: "auto", 
-                                                padding: 2, 
-                                                display: "flex",
-                                                flexDirection: "column"
-                                            }}>
-                                                <TungstenIcon 
-                                                    sx={{
-                                                        fontSize: 32, 
-                                                        color: (!val  ? "#616161" : "#039be5")
-                                                    }}
-                                                />
-                                                <Box sx={{display: "flex", flexDirection: "column", paddingTop: "10px"}}>
-                                                    <Typography variant="button" gutterBottom sx={{fontWeight: 600, marginBlock: 0.35, color: (!val  ? "#616161" : "#039be5") }} >
-                                                        {device?.name}
-                                                    </Typography>
-                                                    <Typography variant="button" sx={{fontWeight: 600, color: (!val  ? "#616161" : "#039be5") }} >
-                                                        {val ? "On" : "Off"}
-                                                    </Typography>
-                                                </Box>
-                                            </Paper>
-                                        </Grid>
-                                    ) 
-                            }) : (
-                                <></>
-                            )
-                        }
-                        
-                        
-                    </>
-
-                </Grid>
-            }
-                
-            </Box> */}
 			</Container>
 		</>
 	);

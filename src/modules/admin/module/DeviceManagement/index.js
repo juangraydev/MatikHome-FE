@@ -30,9 +30,10 @@ import { getHomeList } from '../HomeManagement/store/service'
 import { useDispatch } from 'react-redux';
 
 const init_columns = [
-    {label: 'Key', data: 'key', fieldType: 'uuid', align: 'left', width: '33%'},
-    {label: 'Channels', data: 'channel', fieldType: 'pulldown', options: [{label: "1 Channel", value: 1}, {label: "2 Channel", value: 2}, {label: "4 Channel", value: 4}, {label: "8 Channel", value: 8},], align: 'left', width: '33%'},
-    {label: 'Home', data: 'home.name', fieldType: 'home', options: [], align: 'left', width: '34%'},
+    {label: 'Key', data: 'key', fieldType: 'uuid', align: 'left', width: '25%'},
+    {label: 'Type', data: 'device_type', fieldType: 'pulldown', options: [{label: "Monitor", value: 1}, {label: "Control", value: 2}, {label: "Security", value: 3}],align: 'left', width: '25%'},
+    {label: 'Channels', data: 'channel', fieldType: 'pulldown', options: [{label: "1 Channel", value: 1}, {label: "2 Channel", value: 2}, {label: "4 Channel", value: 4}, {label: "8 Channel", value: 8},], align: 'left', width: '25%'},
+    {label: 'Home', data: 'home.name', fieldType: 'home', options: [], align: 'left', width: '25%'},
 ]
 
 
@@ -47,9 +48,12 @@ export default function DeviceManagement() {
     const validationSchema = Yup.object().shape({
         key: Yup.string()
             .required('This Field is Required!'),
+        device_type: Yup.string()
+            .required('This Field is Required!'),
         channel: Yup.string()
             .required('This Field is Required!'),
-        home_id: Yup.string()
+        home_id: Yup.string(),
+        
     });
 
     React.useEffect(()=>{
@@ -65,6 +69,7 @@ export default function DeviceManagement() {
 			.then((res) => {
 				setColumns([
                     {label: 'Key', data: 'key', value: 'key', fieldType: 'uuid', align: 'left', width: '33%'},
+                    {label: 'Type', data: 'device_type',  value: 'device_type', fieldType: 'pulldown', options: [{label: "Monitor", value: 1}, {label: "Control", value: 2}, {label: "Security", value: 3}],align: 'left', width: '25%'},
                     {label: 'Channels', data: 'channel', value: 'channel', fieldType: 'pulldown', options: [{label: "1 Channel", value: 1}, {label: "2 Channel", value: 2}, {label: "4 Channel", value: 4}, {label: "8 Channel", value: 8},], align: 'left', width: '33%'},
                     {label: 'Home', data: 'home.name', value: 'home_id', fieldType: 'home', options: res.map(home => {return {value: home.id,label: home.name}}) || [], align: 'left', width: '34%'},
                 
