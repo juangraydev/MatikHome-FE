@@ -15,8 +15,8 @@ import {
 } from "@mui/material"
 
 import Modal from "../../../shared/components/modal/index"
+import { isJsonString } from "../../../shared/util/common"
 // import Grid from '@mui/material/Unstable_Grid2';
-import TungstenIcon from '@mui/icons-material/Tungsten';
 import { homeList, retrieveTempDevice } from "./service";
 import GeneralSetting from "../component/GeneralSetting"
 import { useSelector, useDispatch } from 'react-redux'
@@ -24,7 +24,7 @@ import {
     selectHome,
     selectRoom
 } from './store/actionCreators'
-import { Settings } from "@mui/icons-material";
+import { Power, Settings } from "@mui/icons-material";
 import HomeSetting from "./component/HomeSetting"
 
 import KitchenIcon from '@mui/icons-material/Kitchen';
@@ -33,6 +33,14 @@ import SingleBedIcon from '@mui/icons-material/SingleBed';
 import GarageIcon from '@mui/icons-material/Garage';
 import BusinessIcon from '@mui/icons-material/Business';
 import DevicesOtherIcon from '@mui/icons-material/DevicesOther';
+
+
+import TungstenIcon from '@mui/icons-material/Tungsten';
+import ThermostatIcon from '@mui/icons-material/Thermostat';
+import PercentIcon from '@mui/icons-material/Percent';
+import OutletIcon from '@mui/icons-material/Outlet';
+import PowerIcon from '@mui/icons-material/Power';
+
 
 import { io } from 'socket.io-client';
 import _ from "lodash";
@@ -58,6 +66,7 @@ function UserDashboard() {
     
     //GET HOME LIST QUERY TO BACKEND
     React.useEffect(()=>{
+		console.log("kani?");
         dispatch(homeList())
     }, [])
 
@@ -81,16 +90,16 @@ function UserDashboard() {
     React.useEffect(()=>{
         if(selectedHome) {
             setRooms(selectedHome['rooms'])
-			setInterval(function() {
-				console.log("This message will appear every 2 seconds!");
-				dispatch(retrieveTempDevice(selectedHome?.id))
-					.then((res)=>{
-						console.log("[temp]ss", res[0].status, res[1].status);
-					})
-					.catch((err)=>{
-						console.log("[temp][err]", err);
-					})
-			}, 2000);
+			// setInterval(function() {
+			// 	console.log("This message will appear every 2 seconds!");
+			// 	dispatch(retrieveTempDevice(selectedHome?.id))
+			// 		.then((res)=>{
+			// 			console.log("[temp]ss", res[0].status, res[1].status);
+			// 		})
+			// 		.catch((err)=>{
+			// 			console.log("[temp][err]", err);
+			// 		})
+			// }, 2000);
         }
         
     },[selectedHome])
@@ -111,7 +120,7 @@ function UserDashboard() {
 			
 			console.log("[home_device]", selectedHome?.id);
             client.on("connect", () => {
-                client.emit("home_devices", selectedHome?.id)
+                client.emit("home_devices", selectedHome?.id.replaceAll("-", ""))
             });
 
             client.on("home_devices", (res) => {
@@ -128,7 +137,7 @@ function UserDashboard() {
 
 
     const handleClickChannel = (id, status) => {
-        client.emit("channel", selectedHome?.id, JSON.stringify({
+        client.emit("channel", selectedHome?.id.replaceAll("-", ""), JSON.stringify({
             'type': "deviceInfo",
             "channelId": id,
             "status": status
@@ -143,7 +152,7 @@ function UserDashboard() {
         dispatch(selectRoom(event.target.id.replaceAll("-","")))
     }
 
-	console.log("[selectedRoom]", selectedRoom);
+	console.log("[selectedRoom]", devices);
 
 	const roomName = (id) => {
 		return selectedHome?.rooms.filter((room) => room?.id.replaceAll("-","") === id)[0]?.name
@@ -210,12 +219,12 @@ function UserDashboard() {
 				>
 					
 					{
-						selectedRoom === "ALL"
-							
-						?<Grid container spacing={2}>
+						selectedRoom === "ALL" 
+						? <Grid container spacing={2}>
 							{
-								Object.groupBy(devices, device => {return device.room_id;})[null]?.map((device, idx) => {
+								devices.length > 0 && Object.groupBy(devices, device => { console.log("[testing]", devices, device); return device.room_id;})[null]?.map((device, idx) => {
 									const val = JSON.parse(device.status)?.on;
+									console.log("[device info]", device);
 									return (
 										<Grid
 											item
@@ -243,14 +252,62 @@ function UserDashboard() {
 													width: "100%",
 												}}
 											>
-												<TungstenIcon
-													sx={{
-														fontSize: 32,
-														color: !val
-															? "#616161"
-															: "#039be5",
-													}}
-												/>
+												{{
+													0: (
+														<TungstenIcon 
+														sx={{
+															fontSize: 32,
+															color: !val
+																? "#616161"
+																: "#039be5",
+														}}/>
+													),
+													1: (
+														<OutletIcon 
+														sx={{
+															fontSize: 32,
+															color: !val
+																? "#616161"
+																: "#039be5",
+														}}/>
+													),
+													2: (
+														<PowerIcon 
+														sx={{
+															fontSize: 32,
+															color: !val
+																? "#616161"
+																: "#039be5",
+														}}/>
+													),
+													3: (
+														<ThermostatIcon 
+														sx={{
+															fontSize: 32,
+															color: !val
+																? "#616161"
+																: "#039be5",
+														}}/>
+													),
+													4: (
+														<PercentIcon 
+														sx={{
+															fontSize: 32,
+															color: !val
+																? "#616161"
+																: "#039be5",
+														}}/>
+													),
+													default: (
+														<TungstenIcon 
+														sx={{
+															fontSize: 32,
+															color: !val
+																? "#616161"
+																: "#039be5",
+														}}/>
+													)
+												}[device.type]}
 												<Box
 													sx={{
 														display: "flex",
@@ -292,8 +349,6 @@ function UserDashboard() {
 								const devicesGroupByRoom = Object.groupBy(devices, device => {
 									return device.room_id;
 								});
-	
-								console.log("[Group Devices]", devicesGroupByRoom[null]);
 								if(!devicesGroupByRoom[room?.id.replaceAll("-", "")]) return <></>
 								return<Grid item spacing={2} xs={12}>
 									<Grid container spacing={2}>
@@ -314,7 +369,10 @@ function UserDashboard() {
 											<>
 												{
 													devicesGroupByRoom[room?.id.replaceAll("-", "")]?.map((device, idx) => {
-														const val = JSON.parse(device.status)?.on;
+														const val = isJsonString(device.status) ? JSON.parse(device.status)?.on : device.status;
+
+														
+														console.log("[device][status]", device.status);
 														return (
 															<Grid
 																item
@@ -325,12 +383,14 @@ function UserDashboard() {
 																xl={2}
 															>
 																<Paper
-																	onClick={() =>
-																		handleClickChannel(
-																			device.id,
-																			!val,
-																		)
-																	}
+																	onClick={() =>{
+																		if(device.type != 1){
+																			handleClickChannel(
+																				device.id,
+																				!val,
+																			)
+																		}
+																	}}
 																	sx={{
 																		backgroundColor: !val
 																			? "#e0e0e0"
@@ -342,14 +402,62 @@ function UserDashboard() {
 																		width: "100%",
 																	}}
 																>
-																	<TungstenIcon
-																		sx={{
-																			fontSize: 32,
-																			color: !val
-																				? "#616161"
-																				: "#039be5",
-																		}}
-																	/>
+																	{{
+																		0: (
+																			<TungstenIcon 
+																			sx={{
+																				fontSize: 32,
+																				color: !val
+																					? "#616161"
+																					: "#039be5",
+																			}}/>
+																		),
+																		1: (
+																			<ThermostatIcon 
+																			sx={{
+																				fontSize: 32,
+																				color: !val
+																					? "#616161"
+																					: "#039be5",
+																			}}/>
+																		),
+																		2: (
+																			<PercentIcon 
+																			sx={{
+																				fontSize: 32,
+																				color: !val
+																					? "#616161"
+																					: "#039be5",
+																			}}/>
+																		),
+																		3: (
+																			<BusinessIcon
+																			sx={{
+																				fontSize: 32,
+																				color: !val
+																					? "#616161"
+																					: "#039be5",
+																			}}/>
+																		),
+																		4: (
+																			<GarageIcon 
+																			sx={{
+																				fontSize: 32,
+																				color: !val
+																					? "#616161"
+																					: "#039be5",
+																			}}/>
+																		),
+																		default: (
+																			<ChairIcon 
+																			sx={{
+																				fontSize: 32,
+																				color: !val
+																					? "#616161"
+																					: "#039be5",
+																			}}/>
+																		)
+																	}[device.type]}
 																	<Box
 																		sx={{
 																			display: "flex",
@@ -379,7 +487,11 @@ function UserDashboard() {
 																					: "#039be5",
 																			}}
 																		>
-																			{val ? "On" : "Off"}
+																			{
+																				device.type === 1 || device.type === 2
+																					? device.status + (device.type === 1 ? '°C' : "%")
+																					: val ? "On" : "Off"
+																			}
 																		</Typography>
 																	</Box>
 																</Paper>
@@ -397,8 +509,8 @@ function UserDashboard() {
 						</Grid>
 						: <Grid container spacing={2}>
 							{devices ? (
-							devices
-								?.filter((device) =>
+							devices && 
+								devices?.filter((device) =>
 									selectedRoom === "ALL"
 										? device
 										: device?.room_id === selectedRoom,

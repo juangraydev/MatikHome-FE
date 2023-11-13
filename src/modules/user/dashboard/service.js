@@ -16,6 +16,7 @@ import { showMessage } from '../../../router/store/actionCreators'
 
 export const homeList = () => async dispatch => {
     dispatch(fetchHomeData())
+    console.log("herre");
     return Http.get(process.env.REACT_APP_API_HOUSE_LIST)
         .then(response => {
             console.log("[home list]",response.data.body?.data);

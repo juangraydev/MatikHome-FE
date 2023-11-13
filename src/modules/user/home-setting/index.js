@@ -73,6 +73,12 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+import TungstenIcon from '@mui/icons-material/Tungsten';
+import ThermostatIcon from '@mui/icons-material/Thermostat';
+import PercentIcon from '@mui/icons-material/Percent';
+import OutletIcon from '@mui/icons-material/Outlet';
+import PowerIcon from '@mui/icons-material/Power';
+
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { useSelector, useDispatch } from "react-redux";
@@ -154,7 +160,8 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
 
   const handleEditDevice = (data) => {
     setDeviceModal('edit')
-    data['room'] = data['room'] ? data['room']['id'] : null;
+    // data['room'] = data['room'] ? data['room']['id'] : null;
+    // console.log("[data room]", data);
     setDeviceModalData(data)
   }
 
@@ -1175,6 +1182,8 @@ function ChannelModal({ handleClose, data }) {
   const [rooms, setRooms] = useState(selectedHome['rooms'])
 
   useEffect(() => {
+    
+    data['room'] = data['room'] ? data['room']['id'] : null;
     setInit(data)
     console.log("[init]", data);
   }, []);
@@ -1182,6 +1191,7 @@ function ChannelModal({ handleClose, data }) {
   const schema = Yup.object().shape({
     name: Yup.string().required("This Field is Required!"),
     room: Yup.string(),
+    type: Yup.number().required("This Field is Required!")
   });
 
 
@@ -1208,78 +1218,116 @@ function ChannelModal({ handleClose, data }) {
           handleChange,
           handleSubmit,
           handleBlur,
-        }) => (
-          <Form>
-            <DialogTitle
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: 400,
-              }}
-            >
-              <Typography>
-                Device Channel
-              </Typography>
-              <IconButton onClick={handleClose}>
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            <DialogContent dividers>
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <TextField
-                  // {...field}
-                  id="name"
-                  type="text"
-                  label="Channel Name"
-                  value={values?.name}
-                  onChange={handleChange}
-                  error={touched?.name && errors?.name}
-                  sx={{
-                    mb: 1,
-                  }}
-                />
-                <TextField
-                  id="room"
-                  name="room"
-                  select
-                  label="Channel Room"
-                  value={values?.room}
-                  onChange={handleChange}
-                  error={touched?.room && errors?.room}
-                  sx={{
-                    "& .MuiSelect-select": {
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1,
-                    },
-                    mb: 1,
-                  }}
-                >
-                  
-                  <MenuItem value={null}>
-                    Do not assign
-                  </MenuItem>
-                  {
-                    rooms && rooms?.map((room, idx) => {
-                      console.log("[room]", room, idx);
-                      return (
-                        <MenuItem key={idx} value={room?.id}>
-                          {room?.name}
-                        </MenuItem>
-                      )
-                    })
-                  }
-                </TextField>
-              </Box>
-            </DialogContent>
-            <DialogActions>
-              <Button type="submit">
-                Update
-              </Button>
-            </DialogActions>
-          </Form>
-        )}
+        }) => {
+
+          console.log("value:", values)
+          return (
+            <Form>
+              <DialogTitle
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: 400,
+                }}
+              >
+                <Typography>
+                  Device Channel
+                </Typography>
+                <IconButton onClick={handleClose}>
+                  <CloseIcon />
+                </IconButton>
+              </DialogTitle>
+              <DialogContent dividers>
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                  <TextField
+                    // {...field}
+                    id="name"
+                    type="text"
+                    label="Channel Name"
+                    value={values?.name}
+                    onChange={handleChange}
+                    error={touched?.name && errors?.name}
+                    sx={{
+                      mb: 1,
+                    }}
+                  />
+                  <TextField
+                    id="type"
+                    name="type"
+                    select
+                    label="Channel type"
+                    value={values?.type}
+                    onChange={handleChange}
+                    error={touched?.type && errors?.type}
+                    sx={{
+                      "& .MuiSelect-select": {
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      },
+                      mb: 1,
+                    }}
+                  >
+                    <MenuItem key={0} value={0}>
+                      <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <TungstenIcon /> Light</Typography>
+                    </MenuItem>
+                    <MenuItem key={0} value={1}>
+                      <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <OutletIcon /> Outlet</Typography>
+                    </MenuItem>
+                    <MenuItem key={0} value={2}>
+                      <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <PowerIcon /> Appliance</Typography>
+                    </MenuItem>
+                    <MenuItem key={0} value={3}>
+                      <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <ThermostatIcon /> Temperature</Typography>
+                    </MenuItem>
+                    <MenuItem key={0} value={4}>
+                      <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <PercentIcon /> Huminidity</Typography>
+                    </MenuItem>
+                    
+                  </TextField>
+                  <TextField
+                    id="room"
+                    name="room"
+                    select
+                    label="Channel Room"
+                    value={values?.room}
+                    onChange={handleChange}
+                    error={touched?.room && errors?.room}
+                    sx={{
+                      "& .MuiSelect-select": {
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                      },
+                      mb: 1,
+                    }}
+                  >
+                    
+                    <MenuItem value={null} sx={{color:"#039be5"}}>
+                      Do not assign
+                    </MenuItem>
+                    {
+                      rooms && rooms?.map((room, idx) => {
+                        console.log("[room]", room, idx);
+                        return (
+                          <MenuItem key={idx} value={room?.id} sx={{color:"#039be5"}}>
+                            {room?.name}
+                          </MenuItem>
+                        )
+                      })
+                    }
+                  </TextField>
+                </Box>
+              </DialogContent>
+              <DialogActions>
+                <Button type="submit">
+                  Update
+                </Button>
+              </DialogActions>
+            </Form>
+          )
+        }}
       </Formik>
     </Dialog>
   );
