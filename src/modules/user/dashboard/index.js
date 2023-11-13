@@ -223,7 +223,7 @@ function UserDashboard() {
 						? <Grid container spacing={2}>
 							{
 								devices.length > 0 && Object.groupBy(devices, device => { console.log("[testing]", devices, device); return device.room_id;})[null]?.map((device, idx) => {
-									const val = JSON.parse(device.status)?.on;
+									const val = (device?.type === 3  || device?.type === 4) ? true : JSON.parse(device.status)?.on;
 									console.log("[device info]", device);
 									return (
 										<Grid
@@ -235,12 +235,13 @@ function UserDashboard() {
 											xl={2}
 										>
 											<Paper
-												onClick={() =>
-													handleClickChannel(
+												onClick={() =>{
+													!(device?.type === 3  || device?.type === 4)
+													&& handleClickChannel(
 														device.id,
 														!val,
 													)
-												}
+												}}
 												sx={{
 													backgroundColor: !val
 														? "#e0e0e0"
@@ -337,7 +338,11 @@ function UserDashboard() {
 																: "#039be5",
 														}}
 													>
-														{val ? "On" : "Off"}
+														{
+															device.type === 3 || device.type === 4 
+															? device?.status + ( device.type === 3 ? "C" : "%")
+															: val ? "On" : "Off"
+														}
 													</Typography>
 												</Box>
 											</Paper>
@@ -369,10 +374,8 @@ function UserDashboard() {
 											<>
 												{
 													devicesGroupByRoom[room?.id.replaceAll("-", "")]?.map((device, idx) => {
-														const val = isJsonString(device.status) ? JSON.parse(device.status)?.on : device.status;
+														const val = (device?.type === 3  || device?.type === 4) ? true : isJsonString(device.status) ? JSON.parse(device.status)?.on : device.status;
 
-														
-														console.log("[device][status]", device.status);
 														return (
 															<Grid
 																item
@@ -384,12 +387,11 @@ function UserDashboard() {
 															>
 																<Paper
 																	onClick={() =>{
-																		if(device.type != 1){
-																			handleClickChannel(
-																				device.id,
-																				!val,
-																			)
-																		}
+																		!(device?.type === 3  || device?.type === 4)
+																		&& handleClickChannel(
+																			device.id,
+																			!val,
+																		)
 																	}}
 																	sx={{
 																		backgroundColor: !val
@@ -413,7 +415,7 @@ function UserDashboard() {
 																			}}/>
 																		),
 																		1: (
-																			<ThermostatIcon 
+																			<OutletIcon 
 																			sx={{
 																				fontSize: 32,
 																				color: !val
@@ -422,7 +424,7 @@ function UserDashboard() {
 																			}}/>
 																		),
 																		2: (
-																			<PercentIcon 
+																			<PowerIcon 
 																			sx={{
 																				fontSize: 32,
 																				color: !val
@@ -431,7 +433,7 @@ function UserDashboard() {
 																			}}/>
 																		),
 																		3: (
-																			<BusinessIcon
+																			<ThermostatIcon 
 																			sx={{
 																				fontSize: 32,
 																				color: !val
@@ -440,7 +442,7 @@ function UserDashboard() {
 																			}}/>
 																		),
 																		4: (
-																			<GarageIcon 
+																			<PercentIcon 
 																			sx={{
 																				fontSize: 32,
 																				color: !val
@@ -449,7 +451,7 @@ function UserDashboard() {
 																			}}/>
 																		),
 																		default: (
-																			<ChairIcon 
+																			<TungstenIcon 
 																			sx={{
 																				fontSize: 32,
 																				color: !val
@@ -488,9 +490,9 @@ function UserDashboard() {
 																			}}
 																		>
 																			{
-																				device.type === 1 || device.type === 2
-																					? device.status + (device.type === 1 ? '°C' : "%")
-																					: val ? "On" : "Off"
+																				device.type === 3 || device.type === 4 
+																				? device?.status + ( device.type === 3 ? "C" : "%")
+																				: val ? "On" : "Off"
 																			}
 																		</Typography>
 																	</Box>
@@ -516,7 +518,7 @@ function UserDashboard() {
 										: device?.room_id === selectedRoom,
 								)
 								?.map((device, idx) => {
-									const val = JSON.parse(device.status)?.on;
+									const val = (device?.type === 3  || device?.type === 4) ? true : JSON.parse(device.status)?.on;
 									return (
 										<Grid
 											item
@@ -527,12 +529,13 @@ function UserDashboard() {
 											xl={2}
 										>
 											<Paper
-												onClick={() =>
-													handleClickChannel(
+												onClick={() =>{
+													!(device?.type === 3  || device?.type === 4) 
+													&& handleClickChannel(
 														device.id,
 														!val,
 													)
-												}
+												}}
 												sx={{
 													backgroundColor: !val
 														? "#e0e0e0"
@@ -581,7 +584,11 @@ function UserDashboard() {
 																: "#039be5",
 														}}
 													>
-														{val ? "On" : "Off"}
+														{
+															device.type === 3 || device.type ===4
+																? device.status + (device.type === 3 ? '°C' : "%")
+																: val ? "On" : "Off"
+														}
 													</Typography>
 												</Box>
 											</Paper>
