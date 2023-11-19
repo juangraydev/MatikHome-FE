@@ -16,7 +16,6 @@ import { showMessage } from '../../../router/store/actionCreators'
 
 export const homeList = () => async dispatch => {
     dispatch(fetchHomeData())
-    console.log("herre");
     return Http.get(process.env.REACT_APP_API_HOUSE_LIST)
         .then(response => {
             console.log("[home list]",response.data.body?.data);
@@ -48,6 +47,21 @@ export const editHome = (data) => async dispatch => {
             .then(response => {
                 dispatch(homeList())
 		        store.dispatch(showMessage('success', "Home Edited Successfully"))
+                resolve();
+            })
+            .catch(error => {
+
+                reject()
+            })
+    })
+}
+
+export const deleteHome = (id) => async dispatch => {
+    return new Promise( (resolve, reject) => {
+        return Http.delete(process.env.REACT_APP_API_HOUSE_LIST+`${id}/`)
+            .then(async (response) => {
+                dispatch(homeList())   
+		        store.dispatch(showMessage('success', "Home Deleted Successfully"))
                 resolve();
             })
             .catch(error => {
@@ -182,11 +196,10 @@ export const inviteUser = (home, data) => async dispatch => {
             .then(response => {
                 dispatch(homeList())
 		        store.dispatch(showMessage('success', "User Invited Successfully"))
-                resolve(response);
+                resolve();
             })
             .catch(error => {
-                console.log("[Error]", error);
-                reject(error)
+                reject()
             })
     })
 }

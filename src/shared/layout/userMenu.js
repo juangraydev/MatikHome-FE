@@ -74,11 +74,16 @@ export default function UserLayout () {
         handleCloseHomeMenu()
     }
 
+    const handleCloseAddHome = () => {
+        setOpenAddHome()
+    }
+
     const handleOpenDeviceSetting = () => setOpenDevice(true);
 
+    console.log("[status]:", openAddHome);
     return (
         <React.Fragment>
-            {openAddHome ?? <AddHome open={true} type="add" />}
+            {openAddHome && <AddHome open={true} type="add" handleClose={handleCloseAddHome}/>}
 
 
 

@@ -67,7 +67,7 @@ function AddHome({open, handleClose, data, type="add"}) {
 
     const EditHomeAPI = (data) => {
         dispatch(editHome(data))
-            .then(()=>{
+            .then((res)=>{
                 handleClose();
             })
     }
@@ -100,12 +100,13 @@ function AddHome({open, handleClose, data, type="add"}) {
                         return errors;
                     }}
                     onSubmit={(values, { setSubmitting }) => {
-                        setTimeout(() => {
+                        setTimeout(async() => {
                             if(type == "add"){
-                                AddHomeAPI(values)
+                                await AddHomeAPI(values)
                             }else if(type == "edit"){
-                                EditHomeAPI(values)
+                                await EditHomeAPI(values)
                             }
+                            handleClose()
                             setSubmitting(false);
                         }, 400);
                     }}

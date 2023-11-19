@@ -4,6 +4,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
   Container,
+  CircularProgress,
   Box,
   Button,
   Typography,
@@ -38,10 +39,11 @@ import {
   AccordionSummary 
 } from "@mui/material";
 
-import { editHome, inviteUser, updateUser, removeMember, addDevice, deleteDevice, updateChannel } from "../dashboard/service";
+import { editHome, deleteHome, inviteUser, updateUser, removeMember, addDevice, deleteDevice, updateChannel } from "../dashboard/service";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { selectHome, selectRoom } from "../dashboard/store/actionCreators";
+import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import _ from "lodash";
 import {
   Add,
@@ -106,6 +108,8 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
   const [roomModalType, setRoomModalType] = React.useState("add");
   const [roomModalData, setRoomModalData] = React.useState({});
   const [memberModalData, setMemberModalData] = React.useState({});
+  
+  const [homeModal, setHomeModal] = React.useState();
 
   
   const [deviceModal, setDeviceModal] = React.useState(null);
@@ -125,12 +129,13 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
         return home?.id === selectedHome?.id;
       });
       if(tempHome[0]?.devices){
-          let tempData = Object.groupBy(tempHome[0]?.devices, channel => {
-            return channel.key;
-          })
-          setDeviceList(tempData)
+          // let tempData = Object.groupBy(tempHome[0]?.devices, channel => {
+          //   return channel.key;
+          // })
+          setDeviceList(tempHome[0]?.devices)
       }
       dispatch(selectHome(tempHome[0]));
+      console.log("[Selected Home]", home, selectedHome, homeData, tempHome);
     }
     
   }, [homeData]);
@@ -160,8 +165,6 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
 
   const handleEditDevice = (data) => {
     setDeviceModal('edit')
-    // data['room'] = data['room'] ? data['room']['id'] : null;
-    // console.log("[data room]", data);
     setDeviceModalData(data)
   }
 
@@ -224,354 +227,384 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
     setMemberModalData(data)
   };
 
+  const handleOpenModalRemoveHome = (data) => {
+    setHomeModal(true)
+  }
+
+  const handleCloseModalRemoveHome = (data) => {
+    setHomeModal(false)
+  }
+
   return (
     <Box id="main" sx={style}>
       <Box id="wrapper">
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Box id="gen_info" sx={{ minHeight: 250 }}>
-              <Formik
-                initialValues={home}
-                enableReinitialize={true}
-                validationSchema={homeInfoSchema}
-                onSubmit={(values, { setSubmitting, resetForm }) => {
-                  setGenInfoEdit(null);
-                  setTimeout(() => {
-                    let temp_data = {
-                      id: values?.id,
-                      name: values?.name,
-                      address: values?.address,
-                    };
-                    if (!_.isEqual(values, home)) editHomeAPI(temp_data);
+        {
+          selectedHome 
+          ? <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Box id="gen_info" sx={{ minHeight: 250 }}>
+                  <Formik
+                    initialValues={home}
+                    enableReinitialize={true}
+                    validationSchema={homeInfoSchema}
+                    onSubmit={(values, { setSubmitting, resetForm }) => {
+                      setGenInfoEdit(null);
+                      setTimeout(() => {
+                        let temp_data = {
+                          id: values?.id,
+                          name: values?.name,
+                          address: values?.address,
+                        };
+                        if (!_.isEqual(values, home)) editHomeAPI(temp_data);
 
-                    setSubmitting(false);
-                  }, 400);
-                  resetForm();
-                }}
+                        setSubmitting(false);
+                      }, 400);
+                      resetForm();
+                    }}
+                  >
+                    {({
+                      values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleSubmit,
+                      handleBlur,
+                    }) => (
+                      <Form>
+                        <List component={Paper}>
+                          <ListItem>
+                            <Typography variant="h5" sx={{ fontWeight: 600, marginRight: 1 }}>
+                              Home General Information
+                            </Typography>
+                            <Button variant="outlined" color="error" startIcon={<DeleteForever />} onClick={handleOpenModalRemoveHome}>
+                              Remove Home
+                            </Button>
+                            <ListItemSecondaryAction>
+                              {genInfoEdit ? (
+                                <>
+                                  <IconButton onClick={handleSubmit}>
+                                    <Save />
+                                  </IconButton>
+                                  <IconButton
+                                    onClick={() => {
+                                      setGenInfoEdit(null);
+                                    }}
+                                  >
+                                    <Cancel />
+                                  </IconButton>
+                                </>
+                              ) : (
+                                <div>
+                                  <IconButton
+                                    onClick={() => {
+                                      setGenInfoEdit(true);
+                                    }}
+                                  >
+                                    <EditRounded />
+                                  </IconButton>
+                                </div>
+                              )}
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                          <ListItem sx={{ display: "block" }}>
+                            <Typography
+                              gutterBottom
+                              sx={{
+                                fontFamily: "inherit",
+                                fontSize: "12px",
+                                color: "rgba(0, 0, 0, 0.6)",
+                                textAlign: "left",
+                                fontWeight: 600,
+                              }}
+                            >
+                              Home Nickname
+                            </Typography>
+                            <OutlinedInput
+                              id="name"
+                              name="name"
+                              placeholder="Home Nickname"
+                              disabled={!genInfoEdit}
+                              sx={{
+                                width: "-webkit-fill-available",
+                              }}
+                              size="small"
+                              autoFocus
+                              // onBlur={handleSubmit}
+                              onChange={handleChange}
+                              value={values.name}
+                              error={touched?.name && errors?.name}
+                            />
+                            <FormHelperText error={touched?.name && errors?.name}>
+                              {touched?.name && errors?.name}
+                            </FormHelperText>
+                          </ListItem>
+                          <ListItem sx={{ display: "block" }}>
+                            <Typography
+                              gutterBottom
+                              sx={{
+                                fontFamily: "inherit",
+                                fontSize: "12px",
+                                color: "rgba(0, 0, 0, 0.6)",
+                                textAlign: "left",
+                                fontWeight: 600,
+                              }}
+                            >
+                              Home Address
+                            </Typography>
+                            <OutlinedInput
+                              id="address"
+                              name="address"
+                              placeholder="Home Address"
+                              sx={{
+                                width: "-webkit-fill-available",
+                              }}
+                              disabled={!genInfoEdit}
+                              size="small"
+                              autoFocus
+                              // onBlur={handleSubmit}
+                              onChange={handleChange}
+                              value={values.address}
+                              error={touched?.address && errors?.address}
+                            />
+                            <FormHelperText
+                              error={touched?.address && errors?.address}
+                            >
+                              {touched?.address && errors?.address}
+                            </FormHelperText>
+                          </ListItem>
+                        </List>
+                      </Form>
+                    )}
+                  </Formik>
+                </Box>
+                <Box id="room_list" sx={{ minHeight: "calc(100vh - 350px)" }}>
+                  <List component={Paper} sx={{ minHeight: "calc(100vh - 362px)" }}>
+                    <ListItem>
+                      <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                        Rooms List
+                      </Typography>
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          onClick={() => {
+                            handleOpenAddRoom("add");
+                          }}
+                        >
+                          <Add />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                    {home &&
+                      home?.rooms?.map((room) => {
+                        return (
+                          <ListItem>
+                            <ListItemIcon sx={{ minWidth: 24, marginRight: 1 }}>
+                              {
+                                {
+                                  0: <KitchenIcon />,
+                                  1: <ChairIcon />,
+                                  2: <SingleBedIcon />,
+                                  3: <BusinessIcon />,
+                                  4: <GarageIcon />,
+                                  default: <ChairIcon />,
+                                }[room.type]
+                              }
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={room?.name}
+                              sx={{ textTransform: "capitalize" }}
+                            />
+                            <ListItemSecondaryAction>
+                              <IconButton
+                                onClick={(e) => handleOpenRoomMenu(e, room)}
+                              >
+                                <MoreVertIcon />
+                              </IconButton>
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                        );
+                      })}
+
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={roomMenuEl}
+                      open={roomMenuOpen}
+                      onClose={handleCloseRoomMenu}
+                      MenuListProps={{
+                        "aria-labelledby": "basic-button",
+                      }}
+                    >
+                      <MenuItem onClick={(e) => handleOpenAddRoom("edit")}>
+                        Edit
+                      </MenuItem>
+                      <MenuItem onClick={handleOpenDeleteRoom}>Delete</MenuItem>
+                    </Menu>
+                  </List>
+                </Box>
+              </Grid>
+              <Grid
+                item
+                xs={6}
+                sx={{ display: "flex", flexDirection: "column", gap: 2 }}
               >
-                {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleSubmit,
-                  handleBlur,
-                }) => (
-                  <Form>
-                    <List component={Paper}>
-                      <ListItem>
-                        <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                          Home General Information
-                        </Typography>
-                        <ListItemSecondaryAction>
-                          {genInfoEdit ? (
-                            <>
-                              <IconButton onClick={handleSubmit}>
-                                <Save />
+                <Box id="member_list" sx={{ minHeight: "calc(50vh - 64px)" }}>
+                  <List component={Paper} sx={{ minHeight: "100%", maxHeight: '100%' }}>
+                    <ListItem divider>
+                      <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                        Home Members
+                      </Typography>
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          onClick={() => {
+                            handleInviteUser();
+                          }}
+                        >
+                          <Add />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                    {home &&
+                      home?.members?.map((user) => {
+                        console.log("[U]", user);
+                        return (
+                          <ListItem divider>
+                            <ListItemText
+                              primary={user?.full_name}
+                              secondary={
+                                user?.role
+                                  ? "Owner" + (user?.status ? "" : "(Pending)")
+                                  : "Member" + (user?.status ? "" : "(Pending)")
+                              }
+                              sx={{ textTransform: "capitalize" }}
+                            />
+                            <ListItemSecondaryAction>
+                              <IconButton
+                                onClick={() => {
+                                  handleEditHomeMember(user);
+                                }}
+                              >
+                                <Edit color="primary" />
                               </IconButton>
                               <IconButton
                                 onClick={() => {
-                                  setGenInfoEdit(null);
+                                  handleDeleteHomeMember(user);
                                 }}
                               >
-                                <Cancel />
+                                <Delete color="error" />
                               </IconButton>
-                            </>
-                          ) : (
-                            <IconButton
-                              onClick={() => {
-                                setGenInfoEdit(true);
-                              }}
-                            >
-                              <EditRounded />
-                            </IconButton>
-                          )}
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      <ListItem sx={{ display: "block" }}>
-                        <Typography
-                          gutterBottom
-                          sx={{
-                            fontFamily: "inherit",
-                            fontSize: "12px",
-                            color: "rgba(0, 0, 0, 0.6)",
-                            textAlign: "left",
-                            fontWeight: 600,
-                          }}
-                        >
-                          Home Nickname
-                        </Typography>
-                        <OutlinedInput
-                          id="name"
-                          name="name"
-                          placeholder="Home Nickname"
-                          disabled={!genInfoEdit}
-                          sx={{
-                            width: "-webkit-fill-available",
-                          }}
-                          size="small"
-                          autoFocus
-                          // onBlur={handleSubmit}
-                          onChange={handleChange}
-                          value={values.name}
-                          error={touched?.name && errors?.name}
-                        />
-                        <FormHelperText error={touched?.name && errors?.name}>
-                          {touched?.name && errors?.name}
-                        </FormHelperText>
-                      </ListItem>
-                      <ListItem sx={{ display: "block" }}>
-                        <Typography
-                          gutterBottom
-                          sx={{
-                            fontFamily: "inherit",
-                            fontSize: "12px",
-                            color: "rgba(0, 0, 0, 0.6)",
-                            textAlign: "left",
-                            fontWeight: 600,
-                          }}
-                        >
-                          Home Address
-                        </Typography>
-                        <OutlinedInput
-                          id="address"
-                          name="address"
-                          placeholder="Home Address"
-                          sx={{
-                            width: "-webkit-fill-available",
-                          }}
-                          disabled={!genInfoEdit}
-                          size="small"
-                          autoFocus
-                          // onBlur={handleSubmit}
-                          onChange={handleChange}
-                          value={values.address}
-                          error={touched?.address && errors?.address}
-                        />
-                        <FormHelperText
-                          error={touched?.address && errors?.address}
-                        >
-                          {touched?.address && errors?.address}
-                        </FormHelperText>
-                      </ListItem>
-                    </List>
-                  </Form>
-                )}
-              </Formik>
-            </Box>
-            <Box id="room_list" sx={{ minHeight: "calc(100vh - 350px)" }}>
-              <List component={Paper} sx={{ minHeight: "calc(100vh - 362px)" }}>
-                <ListItem>
-                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                    Rooms List
-                  </Typography>
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      onClick={() => {
-                        handleOpenAddRoom("add");
-                      }}
-                    >
-                      <Add />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-                {home &&
-                  home?.rooms?.map((room) => {
-                    return (
-                      <ListItem>
-                        <ListItemIcon sx={{ minWidth: 24, marginRight: 1 }}>
-                          {
-                            {
-                              0: <KitchenIcon />,
-                              1: <ChairIcon />,
-                              2: <SingleBedIcon />,
-                              3: <BusinessIcon />,
-                              4: <GarageIcon />,
-                              default: <ChairIcon />,
-                            }[room.type]
-                          }
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={room?.name}
-                          sx={{ textTransform: "capitalize" }}
-                        />
-                        <ListItemSecondaryAction>
-                          <IconButton
-                            onClick={(e) => handleOpenRoomMenu(e, room)}
-                          >
-                            <MoreVertIcon />
-                          </IconButton>
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    );
-                  })}
-
-                <Menu
-                  id="basic-menu"
-                  anchorEl={roomMenuEl}
-                  open={roomMenuOpen}
-                  onClose={handleCloseRoomMenu}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
-                >
-                  <MenuItem onClick={(e) => handleOpenAddRoom("edit")}>
-                    Edit
-                  </MenuItem>
-                  <MenuItem onClick={handleOpenDeleteRoom}>Delete</MenuItem>
-                </Menu>
-              </List>
-            </Box>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-          >
-            <Box id="member_list" sx={{ height: "calc(50vh - 64px)" }}>
-              <List component={Paper} sx={{ height: "calc(50vh - 64px)" }}>
-                <ListItem divider>
-                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                    Home Members
-                  </Typography>
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      onClick={() => {
-                        handleInviteUser();
-                      }}
-                    >
-                      <Add />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-                {home &&
-                  home?.members?.map((user) => {
-                    console.log("[U]", user);
-                    return (
-                      <ListItem divider>
-                        <ListItemText
-                          primary={user?.full_name}
-                          secondary={
-                            user?.role
-                              ? "Owner" + (user?.status ? "" : "(Pending)")
-                              : "Member" + (user?.status ? "" : "(Pending)")
-                          }
-                          sx={{ textTransform: "capitalize" }}
-                        />
-                        <ListItemSecondaryAction>
-                          <IconButton
-                            onClick={() => {
-                              handleEditHomeMember(user);
-                            }}
-                          >
-                            <Edit color="primary" />
-                          </IconButton>
-                          <IconButton
-                            onClick={() => {
-                              handleDeleteHomeMember(user);
-                            }}
-                          >
-                            <Delete color="error" />
-                          </IconButton>
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    );
-                  })}
-              </List>
-            </Box>
-            <Box id="device_list" sx={{ height: "calc(50vh - 64px)" }}>
-              <List component={Paper} sx={{ height: "calc(50vh - 64px)", maxHeight: "calc(50vh - 64px)"}}>
-                <ListItem divider>
-                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                    Device List
-                  </Typography>
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      onClick={() => {
-                        handleAddDevice();
-                      }}
-                    >
-                      <Add />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <Box sx={{overflowY: 'auto', height: '100%', maxHeight: 'calc(50vh - 128px)'}}>
-                  {deviceList &&
-                    Object.keys(deviceList)?.map((device, idx) => {
-                      console.log("[devices]", device);
-                      return (
-                        <>
-                          <Accordion expanded={expanded === idx} onChange={handleChangeDeviceCollapse(idx)} >
-                            <AccordionSummary
-                              expandIcon={
-                                <ExpandMoreIcon
-                                  sx={{
-                                    pointerEvents: "auto"
-                                  }}
-                                />
-                              }
-                              aria-controls="panel1bh-content"
-                              id="panel1bh-header"
-                              sx={{
-                                
-                                '& .MuiAccordionSummary-content': {
-                                  display: 'flex',
-                                  justifyContent: 'space-between',
-                                  alignItems: 'center'
-                                },
-                              }}
-                            >
-                              <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                                {device}
-                              </Typography>
-                              <Typography sx={{ color: 'text.secondary' }}>{deviceList[device]?.length} channels</Typography>
-                              
-                              <IconButton
-                                id="delete"
-                                key="delete"
-                                onClick={()=>{handleDeleteDevice(deviceList[device])}}
-                              >
-                                <Delete key="delete" color="error" />
-                              </IconButton>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              {
-                                deviceList[device]?.map((channels) => {
-                                  return (
-                                    <ListItem divider>
-                                      <ListItemText
-                                        primary={channels?.name}
-                                        secondary={channels?.room?.name || 'Not assigned to any room'}
-                                        sx={{ textTransform: "capitalize" }}
-                                      />
-                                      <ListItemSecondaryAction>
-                                        <IconButton
-                                          onClick={() => {
-                                            handleEditDevice(channels);
-                                          }}
-                                        >
-                                          <Edit color="primary" />
-                                        </IconButton>
-                                      </ListItemSecondaryAction>
-                                    </ListItem>
-                                  )
-                                })
-                              }
-                            </AccordionDetails>
-                          </Accordion>
-
-
-                          
-                        </>
-                        
-                      );
-                  })}
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                        );
+                      })}
+                  </List>
                 </Box>
-              </List>
-            </Box>
-          </Grid>
-        </Grid>
+                <Box id="device_list" sx={{ minHeight: "calc(50vh - 64px)" }}>
+                  <List component={Paper} sx={{ minHeight: "100%", maxHeight: '100%' }}>
+                    <ListItem divider>
+                      <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                        Device List
+                      </Typography>
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          onClick={() => {
+                            handleAddDevice();
+                          }}
+                        >
+                          <Add />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                    <Box sx={{overflowY: 'auto', height: '100%', maxHeight: 'calc(50vh - 64px)'}}>
+                      {deviceList &&
+                        deviceList?.map((device, idx) => {
+                          console.log("[devices]", device);
+                          return (
+                            <>
+                              <Accordion expanded={expanded === idx} onChange={handleChangeDeviceCollapse(idx)} >
+                                <AccordionSummary
+                                  expandIcon={
+                                    <ExpandMoreIcon
+                                      sx={{
+                                        pointerEvents: "auto"
+                                      }}
+                                    />
+                                  }
+                                  aria-controls="panel1bh-content"
+                                  id="panel1bh-header"
+                                  sx={{
+                                    '& .MuiAccordionSummary-content': {
+                                      display: 'flex',
+                                      justifyContent: 'space-between',
+                                      alignItems: 'center'
+                                    },
+                                  }}
+                                >
+                                  <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                                    {device.key}
+                                  </Typography>
+                                  <Typography sx={{ color: 'text.secondary' }}>{device?.type == 1 ? "Monitor" : device?.type == 2 ? "Security" : "Control"} </Typography>
+                                  
+                                  <IconButton
+                                    id="delete"
+                                    key="delete"
+                                    onClick={()=>{handleDeleteDevice(device)}}
+                                  >
+                                    <Delete key="delete" color="error" />
+                                  </IconButton>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  {
+                                    device && device?.channels?.map((channel) => {
+                                      return (
+                                        <ListItem divider>
+                                          <ListItemText
+                                            primary={channel?.name}
+                                            secondary={channel?.room?.name || 'Not assigned to any room'}
+                                            sx={{ textTransform: "capitalize" }}
+                                          />
+                                          <ListItemSecondaryAction>
+                                            <IconButton
+                                              onClick={() => {
+                                                handleEditDevice(channel);
+                                              }}
+                                            >
+                                              <Edit color="primary" />
+                                            </IconButton>
+                                          </ListItemSecondaryAction>
+                                        </ListItem>
+                                      )
+                                    })
+                                  }
+                                </AccordionDetails>
+                              </Accordion>
+                            </>
+                            
+                          );
+                      })}
+                    </Box>
+                  </List>
+                </Box>
+              </Grid>
+            </Grid>
+          : <Box 
+              sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+                height: 'calc(100vh - 128px)'
+              }}
+              ><CircularProgress/></Box>
+
+        }
       </Box>
+      {
+        homeModal && (
+          <HomeModalDelete
+            handleClose={handleCloseModalRemoveHome}
+          />
+        )
+      }
+
+
       {roomModal && (
         <RoomModal
           handleClose={handleCloseAddRoom}
@@ -618,6 +651,52 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
         />
       )}
     </Box>
+  );
+}
+
+function HomeModalDelete({ handleClose }) {
+  const dispatch = useDispatch();
+  const selectedHome = useSelector((state) => state.homeData.selectedHome);
+  const homeData = useSelector((state) => state.homeData.data);
+
+  const handleRemove = async() => {
+    await dispatch(deleteHome(selectedHome?.id))
+    let home_list = homeData.filter((home) => {
+      return home?.id !== selectedHome?.id;
+    });
+    dispatch(selectHome(home_list[0]))
+    handleClose();
+  };
+
+  return (
+    <Dialog open={true} onClose={handleClose}>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: 400,
+        }}
+      >
+        <Typography>Home Remove</Typography>
+        <IconButton onClick={handleClose}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers sx={{ maxWidth: 400, textAlign: "center" }}>
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          Are you sure to delete this home "{selectedHome?.name}"? 
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button color="error" onClick={handleRemove}>
+          Remove
+        </Button>
+        <Button color="inherit" onClick={handleClose}>
+          Cancel
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
@@ -817,9 +896,13 @@ function InviteModal({ open, handleClose }) {
         validationSchema={invite_schema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setTimeout(() => {
-            dispatch(inviteUser(selectedHome, values)).then((res) => {
-              console.log("[invite user]", res);
-            });
+            dispatch(inviteUser(selectedHome, values))
+            .then((res) => {
+              console.log("[Invite User]", res);
+            })
+            .catch((err) => {
+              console.log("[Invite User Error]", err);
+            })
             console.log("[Invite]", selectedHome, values);
             setSubmitting(false);
             // handleClose();
@@ -876,7 +959,7 @@ function InviteModal({ open, handleClose }) {
               </Box>
             </DialogContent>
             <DialogActions>
-              <Button type="submit">Search</Button>
+              <Button type="submit">Invite</Button>
             </DialogActions>
           </Form>
         )}
@@ -1136,7 +1219,8 @@ function DeviceModalDelete({ handleClose, data }) {
   const selectedHome = useSelector((state) => state.homeData.selectedHome);
 
   const handleRemove = () => {
-    dispatch(deleteDevice(selectedHome?.id, data[0]?.key));
+    console.log("[selected Home][Device]", data);
+    dispatch(deleteDevice(selectedHome?.id, data?.key));
     handleClose();
   };
 
@@ -1157,7 +1241,7 @@ function DeviceModalDelete({ handleClose, data }) {
       </DialogTitle>
       <DialogContent dividers sx={{ maxWidth: 400, textAlign: "center" }}>
         <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          Are you sure to Remove "{data[0]['key']}" Device with {data?.length} channels in "{selectedHome?.name}"?
+          Are you sure to Remove "{data['key']}" Device  in "{selectedHome?.name}"?
         </Typography>
       </DialogContent>
       <DialogActions>
@@ -1180,19 +1264,32 @@ function ChannelModal({ handleClose, data }) {
     room: "",
   });
   const [rooms, setRooms] = useState(selectedHome['rooms'])
+  const [schema, setSchema] = useState({})
 
   useEffect(() => {
-    
-    data['room'] = data['room'] ? data['room']['id'] : null;
-    setInit(data)
-    console.log("[init]", data);
+    let temp_data = _.cloneDeep(data);
+    if(_.isObject(temp_data['room'])){
+      temp_data['room'] = temp_data['room']['id']
+    }
+    console.log("[temp data]", temp_data)
+
+    setInit(temp_data)
+    if(Number(data['type']) <= 3){
+      setSchema(Yup.object().shape({
+        name: Yup.string().required("This Field is Required!"),
+        room: Yup.string(),
+      }))
+    }else {
+      setSchema(Yup.object().shape({
+        name: Yup.string().required("This Field is Required!"),
+        room: Yup.string(),
+        type: Yup.number().required("This Field is Required!")
+      }))
+    }
+
   }, []);
 
-  const schema = Yup.object().shape({
-    name: Yup.string().required("This Field is Required!"),
-    room: Yup.string(),
-    type: Yup.number().required("This Field is Required!")
-  });
+
 
 
   return (
@@ -1204,6 +1301,9 @@ function ChannelModal({ handleClose, data }) {
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setTimeout(() => {
             console.log("[channel modal]", values);
+            if(values['room'] === '-'){
+              values['room'] = ""
+            }
             dispatch(updateChannel(data?.id, values))
             setSubmitting(false);
             handleClose();
@@ -1241,7 +1341,6 @@ function ChannelModal({ handleClose, data }) {
               <DialogContent dividers>
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <TextField
-                    // {...field}
                     id="name"
                     type="text"
                     label="Channel Name"
@@ -1252,40 +1351,38 @@ function ChannelModal({ handleClose, data }) {
                       mb: 1,
                     }}
                   />
-                  <TextField
-                    id="type"
-                    name="type"
-                    select
-                    label="Channel type"
-                    value={values?.type}
-                    onChange={handleChange}
-                    error={touched?.type && errors?.type}
-                    sx={{
-                      "& .MuiSelect-select": {
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                      },
-                      mb: 1,
-                    }}
-                  >
-                    <MenuItem key={0} value={0}>
-                      <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <TungstenIcon /> Light</Typography>
-                    </MenuItem>
-                    <MenuItem key={0} value={1}>
-                      <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <OutletIcon /> Outlet</Typography>
-                    </MenuItem>
-                    <MenuItem key={0} value={2}>
-                      <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <PowerIcon /> Appliance</Typography>
-                    </MenuItem>
-                    <MenuItem key={0} value={3}>
-                      <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <ThermostatIcon /> Temperature</Typography>
-                    </MenuItem>
-                    <MenuItem key={0} value={4}>
-                      <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <PercentIcon /> Huminidity</Typography>
-                    </MenuItem>
-                    
-                  </TextField>
+                  {
+                    Number(data['type']) > 3 && (
+                      <TextField
+                        id="type"
+                        name="type"
+                        select
+                        label="Channel type"
+                        value={Number(values?.type)}
+                        onChange={handleChange}
+                        error={touched?.type && errors?.type}
+                        sx={{
+                          "& .MuiSelect-select": {
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                          },
+                          mb: 1,
+                        }}
+                      >
+                        <MenuItem value={4}>
+                          <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <ToggleOnIcon /> Switch </Typography>
+                        </MenuItem>
+                        <MenuItem value={5}>
+                          <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <TungstenIcon/> Light </Typography>
+                        </MenuItem>
+                        <MenuItem value={6}>
+                          <Typography sx={{color: "#039be5", display: "flex", alignItems: 'center', gap: 1}}> <OutletIcon /> Outlet </Typography>
+                        </MenuItem>
+                      </TextField>
+                    )
+                  }
+                  
                   <TextField
                     id="room"
                     name="room"
@@ -1304,7 +1401,7 @@ function ChannelModal({ handleClose, data }) {
                     }}
                   >
                     
-                    <MenuItem value={null} sx={{color:"#039be5"}}>
+                    <MenuItem value={"-"} sx={{color:"#039be5"}}>
                       Do not assign
                     </MenuItem>
                     {

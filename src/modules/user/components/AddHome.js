@@ -106,6 +106,7 @@ export default function Addhome({ open, handleClose }) {
 					setTimeout(() => {
 						setSubmitting(false);
 						handleSave(values);
+						handleClose()
 					}, 400);
 				}}
 			>

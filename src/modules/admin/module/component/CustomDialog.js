@@ -118,7 +118,7 @@ export default function FormDialog({
                 }) => 
                 
                 {
-                    console.log("[errors]",errors,values);
+                    console.log("[dialog]",values);
                     return (
                         <Form>
                             <DialogContent>

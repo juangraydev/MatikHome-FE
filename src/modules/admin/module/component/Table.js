@@ -92,6 +92,7 @@ export default function AdminTable({
     );
 
     const CustomColumnCell = ({row, column}) => {
+        console.log("[type]", row, column?.data);
         switch (column?.data) {
             case 'menu':
                 return <TableCell align={column?.align}><IconButton> <MoreVertIcon/> </IconButton></TableCell>
@@ -106,6 +107,20 @@ export default function AdminTable({
             case 'members':
             case 'devices': 
                 return <TableCell align={column?.align}>{row[column?.data]?.length || 0}</TableCell>
+
+            case 'type':
+                return <TableCell 
+                            align={column?.align}
+                        >{
+                            {
+                                '1': "Monitor",
+                                '2': "Security",
+                                '3': "Control 2 Channels",
+                                '4': "Control 4 Channels",
+                                default:  "Monitor",
+                            }[ row["type"]]}     
+                            </TableCell>
+            
 
             case 'channel': 
                 return <TableCell align={column?.align}>{column?.data.split('.').reduce(function(o, k) {

@@ -32,9 +32,10 @@ import { useDispatch } from 'react-redux';
 const columns = [
     {label: 'Nickname', data: 'name', value: 'name', fieldType: 'text', align: 'left', width: '25%'},
     {label: 'Address', data: 'address', value: 'address', fieldType: 'text', align: 'left', width: '30%'},
-    {label: 'Members', data: 'members', value: 'members', fieldType: 'member', align: 'left', width: '15%'},
-    {label: 'Rooms', data: 'rooms', value: 'rooms', fieldType: 'room', align: 'left', width: '15%'},
-    {label: 'Devices', data: 'devices', value: 'devices', fieldType: 'device', align: 'left', width: '15%'},
+    {label: 'Created By', data: 'created_by.username', value: 'created_by', fieldType: 'text', align: 'left', width: '15%'},
+    {label: 'Members', data: 'members', value: 'members', fieldType: 'member', align: 'left', width: '10%'},
+    {label: 'Rooms', data: 'rooms', value: 'rooms', fieldType: 'room', align: 'left', width: '10%'},
+    {label: 'Devices', data: 'devices', value: 'devices', fieldType: 'device', align: 'left', width: '10%'},
 ]
 
 export default function HomeManagement() {
