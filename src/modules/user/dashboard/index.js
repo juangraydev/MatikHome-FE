@@ -461,6 +461,67 @@ function UserDashboard() {
 														</Box>
 													</Paper>
 												),
+												// 4: (
+												// 	<Paper
+												// 		sx={{
+												// 			backgroundColor: !val
+												// 				? "#e0e0e0"
+												// 				: "White",
+												// 			height: "auto",
+												// 			padding: 2,
+												// 			display: "flex",
+												// 			flexDirection: "column",
+												// 			width: "100%",
+												// 		}}
+												// 		onClick={(e)=>{
+												// 			handleClickChannel(
+												// 				device.id,
+												// 				!val,
+												// 			)
+												// 		}}
+												// 	>
+												// 		<TungstenIcon 
+												// 			sx={{
+												// 				fontSize: 32,
+												// 				color: !val
+												// 					? "#616161"
+												// 					: "#039be5",
+												// 			}}
+												// 		/>
+												// 		<Box
+												// 			sx={{
+												// 				display: "flex",
+												// 				flexDirection: "column",
+												// 				paddingTop: "10px",
+												// 			}}
+												// 		>
+												// 			<Typography
+												// 				variant="button"
+												// 				gutterBottom
+												// 				sx={{
+												// 					fontWeight: 600,
+												// 					marginBlock: 0.35,
+												// 					color: !val
+												// 						? "#616161"
+												// 						: "#039be5",
+												// 				}}
+												// 			>
+												// 				{device?.name}
+												// 			</Typography>
+												// 			<Typography
+												// 				variant="button"
+												// 				sx={{
+												// 					fontWeight: 600,
+												// 					color: !val
+												// 						? "#616161"
+												// 						: "#039be5",
+												// 				}}
+												// 			>
+												// 				{val ? "Open" : "Close"}
+												// 			</Typography>
+												// 		</Box>
+												// 	</Paper>
+												// ),
 												5: (
 													<Paper
 														sx={{
@@ -613,8 +674,8 @@ function UserDashboard() {
 											<>
 												{
 													devicesGroupByRoom[room?.id.replaceAll("-", "")]?.map((device, idx) => {
-														const val = (device?.type === 3  || device?.type === 4) ? true : isJsonString(device.status) ? JSON.parse(device.status)?.on : device.status;
-
+														const val = (device?.type === 1  || device?.type === 2) ? true : isJsonString(device.status) ? JSON.parse(device.status)?.on : device.status;
+														console.log("[device status]: " +device.type, val, device);
 														return (
 															<Grid
 																item
@@ -624,118 +685,6 @@ function UserDashboard() {
 																lg={3}
 																xl={2}
 															>
-																{/* <Paper
-																	onClick={() =>{
-																		!(device?.type === 3  || device?.type === 4)
-																		&& handleClickChannel(
-																			device.id,
-																			!val,
-																		)
-																	}}
-																	sx={{
-																		backgroundColor: !val
-																			? "#e0e0e0"
-																			: "white",
-																		height: "auto",
-																		padding: 2,
-																		display: "flex",
-																		flexDirection: "column",
-																		width: "100%",
-																	}}
-																>
-																	{{
-																		0: (
-																			<TungstenIcon 
-																			sx={{
-																				fontSize: 32,
-																				color: !val
-																					? "#616161"
-																					: "#039be5",
-																			}}/>
-																		),
-																		1: (
-																			<OutletIcon 
-																			sx={{
-																				fontSize: 32,
-																				color: !val
-																					? "#616161"
-																					: "#039be5",
-																			}}/>
-																		),
-																		2: (
-																			<PowerIcon 
-																			sx={{
-																				fontSize: 32,
-																				color: !val
-																					? "#616161"
-																					: "#039be5",
-																			}}/>
-																		),
-																		3: (
-																			<ThermostatIcon 
-																			sx={{
-																				fontSize: 32,
-																				color: !val
-																					? "#616161"
-																					: "#039be5",
-																			}}/>
-																		),
-																		4: (
-																			<PercentIcon 
-																			sx={{
-																				fontSize: 32,
-																				color: !val
-																					? "#616161"
-																					: "#039be5",
-																			}}/>
-																		),
-																		default: (
-																			<TungstenIcon 
-																			sx={{
-																				fontSize: 32,
-																				color: !val
-																					? "#616161"
-																					: "#039be5",
-																			}}/>
-																		)
-																	}[device.type]}
-																	<Box
-																		sx={{
-																			display: "flex",
-																			flexDirection: "column",
-																			paddingTop: "10px",
-																		}}
-																	>
-																		<Typography
-																			variant="button"
-																			gutterBottom
-																			sx={{
-																				fontWeight: 600,
-																				marginBlock: 0.35,
-																				color: !val
-																					? "#616161"
-																					: "#039be5",
-																			}}
-																		>
-																			{device?.name}
-																		</Typography>
-																		<Typography
-																			variant="button"
-																			sx={{
-																				fontWeight: 600,
-																				color: !val
-																					? "#616161"
-																					: "#039be5",
-																			}}
-																		>
-																			{
-																				device.type === 3 || device.type === 4 
-																				? device?.status + ( device.type === 3 ? "C" : "%")
-																				: val ? "On" : "Off"
-																			}
-																		</Typography>
-																	</Box>
-																</Paper> */}
 																{{
 																	1: (
 																		<Paper
@@ -913,17 +862,13 @@ function UserDashboard() {
 																				? <ToggleOnIcon 
 																					sx={{
 																						fontSize: 32,
-																						color: !val
-																							? "#616161"
-																							: "#039be5",
+																						color:  "#039be5",
 																					}}
 																				/>
 																				: <ToggleOffIcon 
 																					sx={{
 																						fontSize: 32,
-																						color: !val
-																							? "#616161"
-																							: "#039be5",
+																						color: "#616161",
 																					}}
 																				/>
 																			}
@@ -1116,70 +1061,416 @@ function UserDashboard() {
 											lg={3}
 											xl={2}
 										>
-											<Paper
-												onClick={() =>{
-													!(device?.type === 3  || device?.type === 4) 
-													&& handleClickChannel(
-														device.id,
-														!val,
-													)
-												}}
-												sx={{
-													backgroundColor: !val
-														? "#e0e0e0"
-														: "white",
-													height: "auto",
-													padding: 2,
-													display: "flex",
-													flexDirection: "column",
-													width: "100%",
-												}}
-											>
-												<TungstenIcon
-													sx={{
-														fontSize: 32,
-														color: !val
-															? "#616161"
-															: "#039be5",
-													}}
-												/>
-												<Box
-													sx={{
-														display: "flex",
-														flexDirection: "column",
-														paddingTop: "10px",
-													}}
-												>
-													<Typography
-														variant="button"
-														gutterBottom
+											{{
+												1: (
+													<Paper
 														sx={{
-															fontWeight: 600,
-															marginBlock: 0.35,
-															color: !val
-																? "#616161"
-																: "#039be5",
+															backgroundColor: "white",
+															height: "auto",
+															padding: 2,
+															display: "flex",
+															flexDirection: "column",
+															width: "100%",
 														}}
 													>
-														{device?.name}
-													</Typography>
-													<Typography
-														variant="button"
+														<ThermostatIcon 
 														sx={{
-															fontWeight: 600,
+															fontSize: 32,
+															color: "#039be5",
+														}}/>
+														<Box
+															sx={{
+																display: "flex",
+																flexDirection: "column",
+																paddingTop: "10px",
+															}}
+														>
+															<Typography
+																variant="button"
+																gutterBottom
+																sx={{
+																	fontWeight: 600,
+																	marginBlock: 0.35,
+																	color: "#039be5",
+																}}
+															>
+																{device?.name}
+															</Typography>
+															<Typography
+																variant="button"
+																sx={{
+																	fontWeight: 600,
+																	color: "#039be5",
+																}}
+															>
+																{device?.status + "°C"}
+															</Typography>
+														</Box>
+													</Paper>
+												),
+												2: (
+													<Paper
+														sx={{
+															backgroundColor: "white",
+															height: "auto",
+															padding: 2,
+															display: "flex",
+															flexDirection: "column",
+															width: "100%",
+														}}
+													>
+														<PercentIcon 
+														sx={{
+															fontSize: 32,
+															color: "#039be5",
+														}}/>
+														<Box
+															sx={{
+																display: "flex",
+																flexDirection: "column",
+																paddingTop: "10px",
+															}}
+														>
+															<Typography
+																variant="button"
+																gutterBottom
+																sx={{
+																	fontWeight: 600,
+																	marginBlock: 0.35,
+																	color: "#039be5",
+																}}
+															>
+																{device?.name}
+															</Typography>
+															<Typography
+																variant="button"
+																sx={{
+																	fontWeight: 600,
+																	color: "#039be5",
+																}}
+															>
+																{device?.status + "%"}
+															</Typography>
+														</Box>
+													</Paper>
+												),
+												3: (
+													<Paper
+														sx={{
+															backgroundColor: !val
+																? "#e0e0e0"
+																: "White",
+															height: "auto",
+															padding: 2,
+															display: "flex",
+															flexDirection: "column",
+															width: "100%",
+														}}
+														onClick={(e)=>{
+															handleClickChannel(
+																device.id,
+																!val,
+															)
+														}}
+													>
+														<SensorDoorIcon 
+														sx={{
+															fontSize: 32,
 															color: !val
 																? "#616161"
 																: "#039be5",
+														}}/>
+														<Box
+															sx={{
+																display: "flex",
+																flexDirection: "column",
+																paddingTop: "10px",
+															}}
+														>
+															<Typography
+																variant="button"
+																gutterBottom
+																sx={{
+																	fontWeight: 600,
+																	marginBlock: 0.35,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															>
+																{device?.name}
+															</Typography>
+															<Typography
+																variant="button"
+																sx={{
+																	fontWeight: 600,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															>
+																{val ? "Open" : "Close"}
+															</Typography>
+														</Box>
+													</Paper>
+												),
+												7: (
+													<Paper
+														sx={{
+															backgroundColor: !val
+																? "#e0e0e0"
+																: "White",
+															height: "auto",
+															padding: 2,
+															display: "flex",
+															flexDirection: "column",
+															width: "100%",
+														}}
+														onClick={(e)=>{
+															handleClickChannel(
+																device.id,
+																!val,
+															)
 														}}
 													>
 														{
-															device.type === 3 || device.type ===4
-																? device.status + (device.type === 3 ? '°C' : "%")
-																: val ? "On" : "Off"
+															val 
+															? <ToggleOnIcon 
+																sx={{
+																	fontSize: 32,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															/>
+															: <ToggleOffIcon 
+																sx={{
+																	fontSize: 32,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															/>
 														}
-													</Typography>
-												</Box>
-											</Paper>
+														<Box
+															sx={{
+																display: "flex",
+																flexDirection: "column",
+																paddingTop: "10px",
+															}}
+														>
+															<Typography
+																variant="button"
+																gutterBottom
+																sx={{
+																	fontWeight: 600,
+																	marginBlock: 0.35,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															>
+																{device?.name}
+															</Typography>
+															<Typography
+																variant="button"
+																sx={{
+																	fontWeight: 600,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															>
+																{val ? "Open" : "Close"}
+															</Typography>
+														</Box>
+													</Paper>
+												),
+												4: (
+													<Paper
+														sx={{
+															backgroundColor: !val
+																? "#e0e0e0"
+																: "White",
+															height: "auto",
+															padding: 2,
+															display: "flex",
+															flexDirection: "column",
+															width: "100%",
+														}}
+														onClick={(e)=>{
+															handleClickChannel(
+																device.id,
+																!val,
+															)
+														}}
+													>
+														<TungstenIcon 
+															sx={{
+																fontSize: 32,
+																color: !val
+																	? "#616161"
+																	: "#039be5",
+															}}
+														/>
+														<Box
+															sx={{
+																display: "flex",
+																flexDirection: "column",
+																paddingTop: "10px",
+															}}
+														>
+															<Typography
+																variant="button"
+																gutterBottom
+																sx={{
+																	fontWeight: 600,
+																	marginBlock: 0.35,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															>
+																{device?.name}
+															</Typography>
+															<Typography
+																variant="button"
+																sx={{
+																	fontWeight: 600,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															>
+																{val ? "Open" : "Close"}
+															</Typography>
+														</Box>
+													</Paper>
+												),
+												5: (
+													<Paper
+														sx={{
+															backgroundColor: !val
+																? "#e0e0e0"
+																: "White",
+															height: "auto",
+															padding: 2,
+															display: "flex",
+															flexDirection: "column",
+															width: "100%",
+														}}
+														onClick={(e)=>{
+															handleClickChannel(
+																device.id,
+																!val,
+															)
+														}}
+													>
+														<TungstenIcon 
+															sx={{
+																fontSize: 32,
+																color: !val
+																	? "#616161"
+																	: "#039be5",
+															}}
+														/>
+														<Box
+															sx={{
+																display: "flex",
+																flexDirection: "column",
+																paddingTop: "10px",
+															}}
+														>
+															<Typography
+																variant="button"
+																gutterBottom
+																sx={{
+																	fontWeight: 600,
+																	marginBlock: 0.35,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															>
+																{device?.name}
+															</Typography>
+															<Typography
+																variant="button"
+																sx={{
+																	fontWeight: 600,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															>
+																{val ? "Open" : "Close"}
+															</Typography>
+														</Box>
+													</Paper>
+												),
+												6: (
+													<Paper
+														sx={{
+															backgroundColor: !val
+																? "#e0e0e0"
+																: "White",
+															height: "auto",
+															padding: 2,
+															display: "flex",
+															flexDirection: "column",
+															width: "100%",
+														}}
+														onClick={(e)=>{
+															handleClickChannel(
+																device.id,
+																!val,
+															)
+														}}
+													>
+														<OutletIcon 
+															sx={{
+																fontSize: 32,
+																color: !val
+																	? "#616161"
+																	: "#039be5",
+															}}
+														/>
+														<Box
+															sx={{
+																display: "flex",
+																flexDirection: "column",
+																paddingTop: "10px",
+															}}
+														>
+															<Typography
+																variant="button"
+																gutterBottom
+																sx={{
+																	fontWeight: 600,
+																	marginBlock: 0.35,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															>
+																{device?.name}
+															</Typography>
+															<Typography
+																variant="button"
+																sx={{
+																	fontWeight: 600,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															>
+																{val ? "Open" : "Close"}
+															</Typography>
+														</Box>
+													</Paper>
+												)
+												
+											}[device.type]}
 										</Grid>
 									);
 								})
