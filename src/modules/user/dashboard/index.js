@@ -1051,7 +1051,7 @@ function UserDashboard() {
 										: device?.room_id === selectedRoom,
 								)
 								?.map((device, idx) => {
-									const val = (device?.type === 3  || device?.type === 4) ? true : JSON.parse(device.status)?.on;
+									const val = (device?.type === 1  || device?.type === 2) ? true : JSON.parse(device.status)?.on;
 									return (
 										<Grid
 											item
