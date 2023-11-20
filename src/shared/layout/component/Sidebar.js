@@ -8,6 +8,7 @@ import {
   AppBar,
   Container,
   Toolbar,
+  Badge,
   Menu,
   MenuItem,
   Typography,
@@ -31,6 +32,8 @@ import DevicesOtherOutlinedIcon from "@mui/icons-material/DevicesOtherOutlined";
 import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+import { homeInvitationList, homeInvitationUpdate } from '../../../modules/user/dashboard/service'
 
 const adminNav = [
   {
@@ -59,16 +62,28 @@ export default function Sidebar(props) {
 	const dispatch = useDispatch()
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [userInfo, setUserInfo] = React.useState({})
+  const [inviteList, setInviteList] = React.useState({})
   const navigate = useNavigate();
-  const homes = useSelector(state => state.homeData.data)
   const UserData = useSelector(state => state.UserData.data)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const [inviteEl, setInviteEl] = React.useState(null);
+  const openInvite = Boolean(inviteEl);
   
   useEffect(()=>{
     setUserInfo(jwt_decode(UserData.token))
+    if(UserData){ 
+      dispatch(homeInvitationList())
+        .then((res)=> {
+          console.log("[Invite Notification]",res);
+          setInviteList(res)
+        })
+        .catch((err) => {
+          console.log("[Invite Error]", err);
+        })
+    }
   }, [UserData])
-  
+
   const handleListItemClick = (event, index, link) => {
     setSelectedIndex(index);
     navigate(link);
@@ -76,11 +91,40 @@ export default function Sidebar(props) {
 
 
   const handleUserMenuOpen = (event) => {
+    console.log("[target]", event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
   const handleUserMenuClose = () => {
     setAnchorEl(null);
   };
+
+
+  const handleInviteMenuOpen = (event) => {
+    setInviteEl(event.currentTarget);
+  };
+  
+  const handleInviteMenuClose = () => {
+    setInviteEl(null);
+  };
+  
+
+  const handleAcceptInvite = (invite, status) => {
+    dispatch(homeInvitationUpdate(invite, status))
+      .then((res)=> {
+        dispatch(homeInvitationList())
+          .then((res)=> {
+            console.log("[Invite Notification]",res);
+            setInviteList(res)
+          })
+          .catch((err) => {
+            console.log("[Invite Error]", err);
+          })
+      })
+      .catch((err) => {
+
+      })
+  }
+
 
   return (
     <Box
@@ -178,7 +222,33 @@ export default function Sidebar(props) {
                 color: "#fdfdfd",
               }}
             >
-              <Avatar>{userInfo?.first_name}</Avatar>
+              <IconButton sx={{color: 'white'}} onClick={handleInviteMenuOpen}>
+                <Badge badgeContent={inviteList?.length} color="error">
+                  <Avatar alt={userInfo?.first_name}/>
+                </Badge>
+              </IconButton>
+              {
+                inviteList.length 
+                  ? <Menu
+                    id="invite-menu"
+                    anchorEl={inviteEl}
+                    open={openInvite}
+                    onClose={handleInviteMenuClose}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                  >
+                    {
+                      inviteList.length && inviteList?.map((invite) => {
+                        return <MenuItem onClick={handleInviteMenuClose}>{invite?.name} <Button onClick={()=>{handleAcceptInvite(invite, "accept")}}>Accept</Button><Button color="error" onClick={()=>{handleAcceptInvite(invite, "decline")}}>Decline</Button></MenuItem>
+                      })
+                    }
+                  </Menu>
+                  : <></>
+                  
+              }
+              
               <Stack direction="column">
                 <Typography variant="h6">{userInfo?.first_name + " " + userInfo?.last_name}</Typography>
                 <Typography 

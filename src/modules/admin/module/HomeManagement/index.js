@@ -23,10 +23,11 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AdminTable from '../component/Table';
 // import CreateDialog from './component/create-device-dialog';
+import { useSelector, useDispatch } from 'react-redux'
 
 import * as Yup from 'yup';
 import { getHomeList, addHome, deleteHome } from './store/service'
-import { useDispatch } from 'react-redux';
+import jwt_decode from "jwt-decode"
 
 
 const columns = [
@@ -44,6 +45,9 @@ export default function HomeManagement() {
     
     const [createDialog, setCreateDialog] = React.useState(false)
 	const [rows, setRows] = React.useState([])
+
+    
+    const UserData = useSelector(state => state.UserData.data)
 
     const validationSchema = Yup.object().shape({
         name: Yup.string('')
@@ -87,6 +91,7 @@ export default function HomeManagement() {
 	}, [])
 
     const onAdd = (data) => {
+        data['created_by'] = jwt_decode(UserData?.token).id
         addHome(data)
             .then(async (res)=>{
                 await getHomeList()
@@ -103,8 +108,16 @@ export default function HomeManagement() {
             })
     }
 
-    const onEdit = () => {
-        
+    const onEdit = async () => {
+        console.log("[Retrived][Admin][Home]: HEREHERE");
+        await getHomeList()
+                .then((res) => {
+                    setRows(res);
+                    console.log("[Retrived][Admin][Home]: ",res);
+                })
+                .catch(() => {
+                    setRows([])
+                })
     }
     
     const onDelete = (id) => {

@@ -6,6 +6,7 @@ import {
     selectHome,
     selectRoom,
     fetchHomeDevice,
+    successHomeInvite,
     successHomeDevice,
     failHomeDevice
 } from './store/actionCreators'
@@ -229,6 +230,37 @@ export const removeMember = (home_id, member_id) => async dispatch => {
             })
             .catch(error => {
                 reject()
+            })
+    })
+}
+
+
+export const homeInvitationList = () => async dispatch => {
+    dispatch(fetchHomeData())
+    return new Promise(async (resolve, reject) => {
+        return Http.get(process.env.REACT_APP_API_HOUSE_LIST + `notification/invite/`)
+            .then(response => {
+                console.log("[Home Invite List]",response.data.body?.data);
+                resolve(response.data.body?.data)
+            })
+            .catch(error => {
+                dispatch(failHomeData(error))
+                reject(error)
+            })
+    })
+}
+
+export const homeInvitationUpdate = (invite, status) => async dispatch => {
+    dispatch(fetchHomeData())
+    return new Promise(async (resolve, reject) => {
+        return Http.post(process.env.REACT_APP_API_HOUSE_LIST + `notification/invite/${status}/`, invite)
+            .then(response => {
+                console.log("[Home Invite List]",response.data.body?.data);
+                resolve(response.data.body?.data)
+            })
+            .catch(error => {
+                dispatch(failHomeData(error))
+                reject(error)
             })
     })
 }

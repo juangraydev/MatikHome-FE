@@ -8,6 +8,8 @@ const initialState = {
     selectedHome: null,
     selectedRoom: null,
 
+    inviteList: [],
+
     isPendingDevice: false,
     dataDevice: null,
     errorDevice: null
@@ -24,6 +26,13 @@ export default function reducer(state = initialState, action) {
     const { type, payload } = action;
 
     switch (type) {
+        case type.SUCCESS_HOME_INVITE: 
+            return {
+                ...state,
+                isPending: false,
+                inviteList: payload
+            };
+
         case types.FETCH_HOME_DATA:
             return {
                 ...state,

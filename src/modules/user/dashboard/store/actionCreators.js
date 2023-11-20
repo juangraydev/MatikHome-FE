@@ -21,6 +21,15 @@ export function successHomeData(data) {
     }
 }
 
+export function successHomeInvite(data) {
+    return {
+        type: types.SUCCESS_HOME_INVITE,
+        payload: data
+    }
+}
+
+
+
 // return fail status
 export function failHomeData(error) {
     return {
