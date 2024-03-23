@@ -29,13 +29,13 @@ export default function AuthPage() {
 
     const SignUpSchema = Yup.object().shape({
         first_name: Yup.string()
-            .max(50, 'Exceed from max 50 characters.')
+            .max(20, 'Exceed from max 20 characters.')
             .required('This Field is Required!'),
         last_name: Yup.string()
-            .max(50, 'Exceed from max 50 characters.')
+            .max(20, 'Exceed from max 20 characters.')
             .required('This Field is Required!'),
         username: Yup.string()
-            .max(50, 'Exceed from Maximum 50 characters.')
+            .max(15, 'Exceed from Maximum 15 characters.')
             .required('This Field is Required!'),
         password: Yup.string()
             .min(8, 'Minimum Password should be 8 characters.')

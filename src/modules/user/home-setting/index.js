@@ -240,8 +240,8 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
       <Box id="wrapper">
         {
           selectedHome 
-          ? <Grid container spacing={2}>
-              <Grid item xs={6}>
+          ? <Grid container spacing={2} sx={{paddingBottom: 5}}>
+              <Grid item xl={6} lg={6} md={12} xs={12}>
                 <Box id="gen_info" sx={{ minHeight: 250 }}>
                   <Formik
                     initialValues={home}
@@ -274,11 +274,8 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
                         <List component={Paper}>
                           <ListItem>
                             <Typography variant="h5" sx={{ fontWeight: 600, marginRight: 1 }}>
-                              Home General Information
+                              Home Info
                             </Typography>
-                            <Button variant="outlined" color="error" startIcon={<DeleteForever />} onClick={handleOpenModalRemoveHome}>
-                              Remove Home
-                            </Button>
                             <ListItemSecondaryAction>
                               {genInfoEdit ? (
                                 <>
@@ -294,7 +291,10 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
                                   </IconButton>
                                 </>
                               ) : (
-                                <div>
+                                <div style={{display: 'flex', gap: 10}}> 
+                                  <Button variant="outlined" color="error" startIcon={<DeleteForever />} onClick={handleOpenModalRemoveHome}>
+                                    Remove Home
+                                  </Button>
                                   <IconButton
                                     onClick={() => {
                                       setGenInfoEdit(true);
@@ -443,7 +443,7 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
               </Grid>
               <Grid
                 item
-                xs={6}
+                xl={6} lg={6} md={12} xs={12}
                 sx={{ display: "flex", flexDirection: "column", gap: 2 }}
               >
                 <Box id="member_list" sx={{ minHeight: "calc(50vh - 64px)" }}>

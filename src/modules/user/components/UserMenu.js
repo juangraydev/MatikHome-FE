@@ -11,7 +11,8 @@ import {
     MenuItem,
     ListItemText,
     ListItemIcon,
-    Divider
+    Divider,
+	Popover
 } from "@mui/material"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import KitchenIcon from '@mui/icons-material/Kitchen';
@@ -33,7 +34,7 @@ import HomeSetting from './HomeSetting';
 import GeneralSetting from '../dashboard/component/HomeSetting'
 import { Login } from '@mui/icons-material';
 
-export default function UserLayout () {
+export default function UserLayout (props) {
 	const location = useLocation()
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
@@ -43,7 +44,8 @@ export default function UserLayout () {
     const [openHomeSetting, setOpenHomeSetting] = React.useState(false);
     const [openDevice, setOpenDevice] = React.useState(false);
     const [home, setHome] = React.useState([])
-    
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
     const selectedHome = useSelector(state => state.homeData.selectedHome)
     const selectedRoom = useSelector(state => state.homeData.selectedRoom)
     const homes = useSelector(state => state.homeData.data)
@@ -51,10 +53,22 @@ export default function UserLayout () {
 
     React.useEffect(()=>{
         setHome(selectedHome)
+		handleSelectedHome(selectedHome)
     }, [selectedHome ])
 
+	//Popper Home Name Start
+	const handlePopoverOpen = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
 
-	console.log("[home update]", selectedHome, selectedRoom);
+	const handlePopoverClose = () => {
+		setAnchorEl(null);
+	};
+
+	const open = Boolean(anchorEl);
+
+	//Popper Home Name End
+
     const handleOpenHomeSetting = () => {
         // setOpenHomeSetting(true)
 		navigate('/dashboard/home-setting')
@@ -141,11 +155,45 @@ export default function UserLayout () {
 						>
 							<Typography
 								variant="h5"
-								sx={{ paddingInline: 2, fontWeight: 600 }}
+								aria-owns={open ? 'mouse-over-popover' : undefined}
+								aria-haspopup="true"
+								onMouseEnter={handlePopoverOpen}
+								onMouseLeave={handlePopoverClose}
+
+								sx={{ 
+									paddingInline: 2, 
+									fontWeight: 600,
+									overflow:'hidden',
+									whiteSpace:'nowrap',
+									textOverflow:'ellipsis'
+								}}
 							>
 								{selectedHome?.name.charAt(0).toUpperCase() +
 									selectedHome?.name.slice(1)}
 							</Typography>
+							<Popover
+								id="mouse-over-popover"
+								sx={{
+								pointerEvents: 'none',
+								}}
+								open={open}
+								anchorEl={anchorEl}
+								anchorOrigin={{
+								vertical: 'bottom',
+								horizontal: 'left',
+								}}
+								transformOrigin={{
+								vertical: 'top',
+								horizontal: 'left',
+								}}
+								onClose={handlePopoverClose}
+								disableRestoreFocus
+							>
+								<Typography sx={{ p: 1 }}>
+								{selectedHome?.name.charAt(0).toUpperCase() +
+									selectedHome?.name.slice(1)}
+								</Typography>
+							</Popover>
 							<ExpandMoreIcon sx={{ marginInline: 2 }} />
 						</Box>
 					</ListItemButton>
@@ -155,7 +203,7 @@ export default function UserLayout () {
 					sx={{ mt: "45px" }}
 					PaperProps={{
 						style: {
-							width: 200,
+							width: 250,
 						},
 					}}
 					id="menu-home"
@@ -229,36 +277,38 @@ export default function UserLayout () {
 				</ListItem>
 
 				
-				<ListItem
-					key={"home-setting"}
-					disablePadding
-					onClick={() => handleOpenHomeSetting()}
-				>
-					<ListItemButton
-						selected={selectedRoom === "home-setting"}
-						sx={{
-							minWidth: "35px",
-							// color: selectedRoom === room?.id.replaceAll("-","") ? "#039be5" : "#fff",
-						}}
+				{
+					home && home.members && home.members.filter((memberObj) => memberObj.full_name === props.userInfo.first_name + " " + props.userInfo.last_name)[0].role && <ListItem
+						key={"home-setting"}
+						disablePadding
+						onClick={() => handleOpenHomeSetting()}
 					>
-						<ListItemIcon
-							sx={{ minWidth: "35px", color: "inherit" }}
-						>
-							<ViewQuiltIcon
-								sx={{ color: selectedRoom ==="home-setting"
-									? "#039be5"
-									: "#fff" }}
-							/>
-						</ListItemIcon>
-						<ListItemText
-							primary={"Home Settings"}
+						<ListItemButton
+							selected={selectedRoom === "home-setting"}
 							sx={{
-								color:
-									selectedRoom === "home-setting" ? "#039be5" : "#fff",
+								minWidth: "35px",
+								// color: selectedRoom === room?.id.replaceAll("-","") ? "#039be5" : "#fff",
 							}}
-						/>
-					</ListItemButton>
-				</ListItem>
+						>
+							<ListItemIcon
+								sx={{ minWidth: "35px", color: "inherit" }}
+							>
+								<ViewQuiltIcon
+									sx={{ color: selectedRoom ==="home-setting"
+										? "#039be5"
+										: "#fff" }}
+								/>
+							</ListItemIcon>
+							<ListItemText
+								primary={"Home Settings"}
+								sx={{
+									color:
+										selectedRoom === "home-setting" ? "#039be5" : "#fff",
+								}}
+							/>
+						</ListItemButton>
+					</ListItem>
+				}
 
 				<Divider />
 				<Typography

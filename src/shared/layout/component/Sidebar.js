@@ -91,7 +91,6 @@ export default function Sidebar(props) {
 
 
   const handleUserMenuOpen = (event) => {
-    console.log("[target]", event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
   const handleUserMenuClose = () => {
@@ -188,7 +187,7 @@ export default function Sidebar(props) {
                   }
                 )
                 : (<>
-                  <UserMenu/>
+                  <UserMenu userInfo={userInfo}/>
                   
                 </>)
             }
@@ -250,7 +249,16 @@ export default function Sidebar(props) {
               }
               
               <Stack direction="column">
-                <Typography variant="h6">{userInfo?.first_name + " " + userInfo?.last_name}</Typography>
+                <Typography 
+                variant="h6" 
+                sx={{ 
+									paddingInline: 2, 
+									fontWeight: 600,
+									overflow:'hidden',
+									whiteSpace:'nowrap',
+									textOverflow:'ellipsis'
+								}}
+                >{userInfo?.first_name + " " + userInfo?.last_name}</Typography>
                 <Typography 
                   variant="subtitle2" 
                   

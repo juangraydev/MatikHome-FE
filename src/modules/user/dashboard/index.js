@@ -69,7 +69,6 @@ function UserDashboard() {
     
     //GET HOME LIST QUERY TO BACKEND
     React.useEffect(()=>{
-		console.log("kani?");
         dispatch(homeList())
     }, [])
 
@@ -93,16 +92,6 @@ function UserDashboard() {
     React.useEffect(()=>{
         if(selectedHome) {
             setRooms(selectedHome['rooms'])
-			// setInterval(function() {
-			// 	console.log("This message will appear every 2 seconds!");
-			// 	dispatch(retrieveTempDevice(selectedHome?.id))
-			// 		.then((res)=>{
-			// 			console.log("[temp]ss", res[0].status, res[1].status);
-			// 		})
-			// 		.catch((err)=>{
-			// 			console.log("[temp][err]", err);
-			// 		})
-			// }, 2000);
         }
         
     },[selectedHome])
@@ -113,7 +102,7 @@ function UserDashboard() {
             const socket = io(process.env.REACT_APP_WS_URL);
             setClient(socket)
         }
-    }, [selectedHome])
+    }, [selectedHome, selectedRoom])
 
 
     // [WebSocket Functions]
@@ -348,13 +337,25 @@ function UserDashboard() {
 															)
 														}}
 													>
-														<SensorDoorIcon 
-														sx={{
-															fontSize: 32,
-															color: !val
-																? "#616161"
-																: "#039be5",
-														}}/>
+														{
+															val 
+															? <SensorDoorIcon 
+																sx={{
+																	fontSize: 32,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															/>
+															: <ToggleOffIcon 
+																sx={{
+																	fontSize: 32,
+																	color: !val
+																		? "#616161"
+																		: "#039be5",
+																}}
+															/>
+														}
 														<Box
 															sx={{
 																display: "flex",
