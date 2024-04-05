@@ -35,7 +35,7 @@ const Channel = (props) =>{
     return (
         <Paper
             sx={{
-                backgroundColor: (val && isOnline()) ? "White" : "#e0e0e0",
+                backgroundColor: (isOnline() && val) ? "White" : "#e0e0e0",
                 height: "auto",
                 padding: 2,
                 display: "flex",
@@ -55,12 +55,12 @@ const Channel = (props) =>{
             }}
         >
             {{
-                1: (<ThermostatIcon sx={{fontSize: 32, color: "#039be5"}}/>),
-                2: (<PercentIcon sx={{fontSize: 32, color: "#039be5"}}/>),
-                3: (<SensorDoorIcon sx={{fontSize: 32, color: !val ? "#616161" : "#039be5"}}/>),
-                4: (val ? <ToggleOnIcon sx={{fontSize: 32,color:  "#039be5",}}/> : <ToggleOffIcon sx={{fontSize: 32,color: "#616161",}}/>),
-                5: (<TungstenIcon sx={{fontSize: 32,color: !val? "#616161": "#039be5"}}/>),
-                6: (<OutletIcon sx={{fontSize: 32,color: !val? "#616161": "#039be5",}}/>)
+                1: (<ThermostatIcon sx={{fontSize: 32, color: isOnline() ? "#039be5" : "#616161"}}/>),
+                2: (<PercentIcon sx={{fontSize: 32, color: isOnline() ? "#039be5" : "#616161"}}/>),
+                3: (<SensorDoorIcon sx={{fontSize: 32, color: (isOnline() && val) ? "#039be5" : "#616161"}}/>),
+                4: ((isOnline() && val) ? <ToggleOnIcon sx={{fontSize: 32,color:  "#039be5",}}/> : <ToggleOffIcon sx={{fontSize: 32,color: "#616161",}}/>),
+                5: (<TungstenIcon sx={{fontSize: 32,color: (isOnline() && val) ? "#039be5": "#616161"}}/>),
+                6: (<OutletIcon sx={{fontSize: 32,color: (isOnline() && val) ? "#039be5": "#616161",}}/>)
                 
             }[data.type]} 
 
@@ -77,9 +77,9 @@ const Channel = (props) =>{
                     sx={{
                         fontWeight: 600,
                         marginBlock: 0.35,
-                        color: (!val && isOnline)
-                            ? "#616161"
-                            : "#039be5",
+                        color: (isOnline() && val)
+                            ? "#039be5"
+                            : "#616161",
                     }}
                 >
                     {data?.name}
@@ -88,12 +88,12 @@ const Channel = (props) =>{
                     variant="button"
                     sx={{
                         fontWeight: 600,
-                        color: (!val && isOnline)
-                            ? "#616161"
-                            : "#039be5",
+                        color: (isOnline() && val)
+                            ? "#039be5"
+                            : "#616161",
                     }}
                 >
-                    {isOnline ? (val ? "Open" : "Close") : 'Offline'}
+                    {isOnline() ? (val ? "Open" : "Close") : 'Offline'}
                 </Typography>
             </Box>
         </Paper>
