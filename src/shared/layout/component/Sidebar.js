@@ -215,7 +215,6 @@ export default function Sidebar(props) {
           >
             <Stack
               direction="row"
-              spacing={2}
               sx={{
                 alignItems: "center",
                 color: "#fdfdfd",

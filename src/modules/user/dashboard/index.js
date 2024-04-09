@@ -63,14 +63,19 @@ function UserDashboard() {
     React.useEffect(()=>{
         if(client){
             // client-side
-			
-			console.log("[home_device]", selectedHome?.id);
             client.on("connect", () => {
-                client.emit("home_devices", selectedHome?.id.replaceAll("-", ""))
+				console.log("[home_device][connect]", selectedHome?.id);
+                client.emit("home_device", selectedHome?.id.replaceAll("-", ""))
             });
 
-            client.on("home_devices", (res) => {
-                console.log("res",res,selectedRoom);
+            client.on(`db_devices_${selectedHome?.id.replaceAll("-", "")}`, (res) => {
+				console.log("[home_device][db_devices]", selectedHome?.id, res);
+                client.emit("home_device", selectedHome?.id.replaceAll("-", ""))
+                // setDevices(res)
+            });
+
+			client.on(`devices_${selectedHome?.id.replaceAll("-", "")}`, (res) => {
+				console.log("[home_device][devices]", selectedHome?.id.replaceAll("-", ""), res);
                 setDevices(res)
             });
             
@@ -102,7 +107,8 @@ function UserDashboard() {
 		RoomChannel.push({channels: devicesGroupByRoom[null]})
 	}
 	
-	for( const room in selectedHome.rooms){
+	
+	for( const room in selectedHome?.rooms || []){
 		if(devicesGroupByRoom[selectedHome.rooms[room]?.id.replaceAll("-","")]){
 			let temp = {
 				...selectedHome.rooms[room],
