@@ -32,6 +32,13 @@ const Channel = (props) =>{
         return data.device_status
     }
 
+    const isMonitor = (type) => {
+        return (type == 1 || type == 2)
+    }
+
+    console.log("[data]", data);
+
+
     return (
         <Paper
             sx={{
@@ -46,7 +53,7 @@ const Channel = (props) =>{
                   },
             }}
             onClick={(e)=>{
-                if (isOnline()){
+                if (isOnline() && !isMonitor(data.type)){
                     onToggle(
                         data.id,
                         !val,
@@ -93,7 +100,13 @@ const Channel = (props) =>{
                             : "#616161",
                     }}
                 >
-                    {isOnline() ? (val ? "Open" : "Close") : 'Offline'}
+                    {
+                        isOnline()
+                            ? isMonitor(data.type) 
+                                ? data?.status
+                                : (val ? "Open" : "Close")
+                            : 'Offline'
+                        }
                 </Typography>
             </Box>
         </Paper>
