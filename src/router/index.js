@@ -6,7 +6,7 @@ import AdminUserManagement from '../modules/admin/module/UserManagement'
 import AdminDeviceManagement from '../modules/admin/module/DeviceManagement'
 import AdminHomeManagement from '../modules/admin/module/HomeManagement'
 import AdminHomeEdit from '../modules/admin/module/EditHomeComponent'
-
+import UserSettings from "../modules/auth/Settings"
 import AuthPage from "../modules/auth/index";
 
 import Layout from "../shared/layout"
@@ -30,6 +30,8 @@ function Router() {
           <Route path="/admin/device" element={<AdminDeviceManagement/>}></Route>
           <Route path="/admin/home" element={<AdminHomeManagement/>}></Route>
           <Route path="/admin/home/edit" element={<AdminHomeEdit/>}></Route>
+
+          <Route path="/settings" element={<UserSettings/>}/>
 
 
           {/* <Route path="/admin/device-management" element={<Admin/>}></Route>

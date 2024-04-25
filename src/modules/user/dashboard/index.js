@@ -4,10 +4,13 @@ import {
 	Box,
 	Typography,
     Grid,
-	Breadcrumbs
+	Breadcrumbs,
+	Button
 } from "@mui/material"
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import { isJsonString } from "../../../shared/util/common"
+import {HomeModalDelete} from "../home-setting/index"
 // import Grid from '@mui/material/Unstable_Grid2';
 import { homeList } from "./service";
 import { useSelector, useDispatch } from 'react-redux'
@@ -22,6 +25,7 @@ import Channel from "../component/Channel";
 
 function UserDashboard() {
     const [devices, setDevices] = React.useState([]);
+	const [homeModal, setHomeModal] = React.useState();
     const [client, setClient] = React.useState()
     const homeData = useSelector(state => state.homeData.data)
     const selectedHome = useSelector(state => state.homeData.selectedHome)
@@ -118,6 +122,14 @@ function UserDashboard() {
 		}
 	}
 
+	const handleOpenModalRemoveHome = (data) => {
+		setHomeModal(true)
+	}
+
+	const handleCloseModalRemoveHome = (data) => {
+		setHomeModal(false)
+	}
+
 	return (
 		<>
 			<Container maxWidth={false} sx={{ paddingY: 1.5, margin: 0 }}>
@@ -126,46 +138,57 @@ function UserDashboard() {
 					sx={{
 						paddingBottom: 1.5,
 						display: "flex",
-                        flexDirection: 'column'
+                        flexDirection: 'row',
+						justifyContent: 'space-between'
 					}}
 				>
-					<Breadcrumbs 
-						aria-label="breadcrumb"	
-						sx={{
-							flexGrow: 1,
-						}}
-					>
-						<Typography
-							variant="h4"
-						>
-							{selectedHome &&
-								selectedHome.name.charAt(0).toUpperCase() +
-									selectedHome.name.slice(1)}
-						</Typography>
-						<Typography
-							variant="h5"
+					<Box>
+						<Breadcrumbs 
+							aria-label="breadcrumb"	
 							sx={{
-								textTransform: 'capitalize'
+								flexGrow: 1,
 							}}
 						>
-							{selectedRoom &&
-								roomName(selectedRoom)
-							}
+							<Typography
+								variant="h4"
+							>
+								{selectedHome &&
+									selectedHome.name.charAt(0).toUpperCase() +
+										selectedHome.name.slice(1)}
+							</Typography>
+							<Typography
+								variant="h5"
+								sx={{
+									textTransform: 'capitalize'
+								}}
+							>
+								{selectedRoom &&
+									roomName(selectedRoom)
+								}
+							</Typography>
+						</Breadcrumbs>
+						<Typography
+							variant="subtitle1"
+							sx={{
+								flexGrow: 1,
+								color: '#808080'
+							}}
+						>
+							{selectedHome &&
+								selectedHome.address.charAt(0).toUpperCase() +
+									selectedHome.address.slice(1)}
 						</Typography>
-					</Breadcrumbs>
-                    <Typography
-						variant="subtitle1"
-						sx={{
-							flexGrow: 1,
-                            color: '#808080'
-						}}
-					>
-						{selectedHome &&
-							selectedHome.address.charAt(0).toUpperCase() +
-								selectedHome.address.slice(1)}
-					</Typography>
-					<Box component={"div"}>
-						<HomeSetting />
+					</Box>
+					<Box sx={{width: 'fit-content'}}>
+						<Button variant="outlined" color="error" startIcon={<ExitToAppIcon />} onClick={()=>{handleOpenModalRemoveHome()}}>
+							Leave Home
+						</Button>
+						{
+							homeModal && <HomeModalDelete handleClose={handleCloseModalRemoveHome}/>
+						}
+						<Box component={"div"}>
+							<HomeSetting />
+						</Box>
 					</Box>
 				</Box>
 				<Box

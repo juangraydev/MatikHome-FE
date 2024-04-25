@@ -237,9 +237,9 @@ export default function AuthPage() {
                 <Typography variant="button" sx={{fontFamily: "inherit",fontWeight: 400, marginTop: 2, display: "block", textAlign: "center"}} >
                     { pageType ? "Don't have an account?" : "Already have an account?"}  
                     <Link
-                        component="Typography"
+                        component="button"
                         variant="button"
-                        sx={{fontFamily: "inherit",marginLeft: "5px", color: "#101840", textDecoration: "none"}}
+                        sx={{fontFamily: "inherit",marginLeft: "5px", color: "#1976d2", fontWeight: 'bold', textDecoration: "none"}}
                         onClick={()=>{handleChangePage()}}
                     >
                         { pageType ? "Register now!" : "Login now!"}

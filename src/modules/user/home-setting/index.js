@@ -654,7 +654,7 @@ export default function HomeSetting({ open, handleCloseHomeSetting }) {
   );
 }
 
-function HomeModalDelete({ handleClose }) {
+export function HomeModalDelete({ handleClose }) {
   const dispatch = useDispatch();
   const selectedHome = useSelector((state) => state.homeData.selectedHome);
   const homeData = useSelector((state) => state.homeData.data);

@@ -260,7 +260,7 @@ export default function Sidebar(props) {
                 >{userInfo?.first_name + " " + userInfo?.last_name}</Typography>
                 <Typography 
                   variant="subtitle2" 
-                  
+                  sx={{paddingInline: 2}}
                 >@{userInfo?.username}</Typography>
               </Stack>
             </Stack>
@@ -276,7 +276,7 @@ export default function Sidebar(props) {
                 'aria-labelledby': 'basic-button',
               }}
             >
-              <MenuItem onClick={handleUserMenuClose}>My account</MenuItem>
+              <MenuItem onClick={()=>{handleUserMenuClose(); navigate("/settings")}}>My account</MenuItem>
               <MenuItem onClick={()=>{
                 handleUserMenuClose()
                 dispatch(resetUserData());
