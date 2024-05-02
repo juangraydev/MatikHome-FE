@@ -46,7 +46,7 @@ export const editUser = (data)  => async dispatch => {
     return new Promise(async (resolve, reject) => {
         return Http.put(process.env.REACT_APP_API_ADMIN_USER_LIST, data)
             .then(response => {
-                resolve(response.data.body?.data)
+                resolve(response.data.body)
 		        store.dispatch(showMessage('success', "User updated successfully"))
             })
             .catch(error => {

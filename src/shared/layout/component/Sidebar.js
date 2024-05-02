@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import UserSettingModal from "../../../modules/auth/Settings/index"
 import {
   Box,
   IconButton,
@@ -11,6 +12,7 @@ import {
   Badge,
   Menu,
   MenuItem,
+  Tooltip,
   Typography,
   Link,
   Button,
@@ -34,6 +36,7 @@ import InventoryOutlinedIcon from "@mui/icons-material/InventoryOutlined";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { homeInvitationList, homeInvitationUpdate } from '../../../modules/user/dashboard/service'
+import { set } from "lodash";
 
 const adminNav = [
   {
@@ -62,6 +65,7 @@ export default function Sidebar(props) {
 	const dispatch = useDispatch()
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [userInfo, setUserInfo] = React.useState({})
+  const [userModal, setUserModal] = React.useState(false)
   const [inviteList, setInviteList] = React.useState({})
   const navigate = useNavigate();
   const UserData = useSelector(state => state.UserData.data)
@@ -125,6 +129,14 @@ export default function Sidebar(props) {
   }
 
 
+  const onUserModalOpen = () => {
+    setUserModal(true)
+  }
+  
+  const onUserModalClose = () => {
+    setUserModal(false)
+  }
+
   return (
     <Box
       sx={{
@@ -132,6 +144,9 @@ export default function Sidebar(props) {
         height: "100%",
       }}
     >
+      {
+        userModal && <UserSettingModal handleClose={onUserModalClose}/>
+      }
       <Box
         sx={{
           maxWidth: "300px",
@@ -248,23 +263,28 @@ export default function Sidebar(props) {
               }
               
               <Stack direction="column">
-                <Typography 
-                variant="h6" 
-                sx={{ 
-									paddingInline: 2, 
-									fontWeight: 600,
-									overflow:'hidden',
-									whiteSpace:'nowrap',
-									textOverflow:'ellipsis'
-								}}
-                >{userInfo?.first_name + " " + userInfo?.last_name}</Typography>
-                <Typography 
-                  variant="subtitle2" 
-                  sx={{paddingInline: 2}}
-                >@{userInfo?.username}</Typography>
+                <Tooltip title={userInfo?.first_name + " " + userInfo?.last_name}>
+                  <Typography 
+                  variant="h6" 
+                  sx={{  
+                    paddingLeft: 2,
+                    fontWeight: 600,
+                    overflow:'hidden',
+                    whiteSpace:'nowrap',
+                    textOverflow:'ellipsis',
+                    maxWidth: 185
+                  }}
+                  >{userInfo?.first_name + " " + userInfo?.last_name}</Typography>
+                </Tooltip>
+                <Tooltip title={`@${userInfo?.username}`}>
+                  <Typography 
+                    variant="subtitle2" 
+                    sx={{paddingInline: 2}}
+                  >@{userInfo?.username}</Typography>
+                </Tooltip>
               </Stack>
             </Stack>
-            <IconButton sx={{color: 'white'}} onClick={handleUserMenuOpen}>
+            <IconButton sx={{color: 'white', marginLeft: '0px!important'}} onClick={handleUserMenuOpen}>
               <ExpandMoreIcon/>
             </IconButton>
             <Menu
@@ -276,7 +296,7 @@ export default function Sidebar(props) {
                 'aria-labelledby': 'basic-button',
               }}
             >
-              <MenuItem onClick={()=>{handleUserMenuClose(); navigate("/settings")}}>My account</MenuItem>
+              <MenuItem onClick={()=>{handleUserMenuClose(); onUserModalOpen()}}>My account</MenuItem>
               <MenuItem onClick={()=>{
                 handleUserMenuClose()
                 dispatch(resetUserData());

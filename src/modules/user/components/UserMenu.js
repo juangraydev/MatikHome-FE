@@ -278,7 +278,7 @@ export default function UserLayout (props) {
 
 				
 				{
-					home && home.members && home.members.filter((memberObj) => memberObj.full_name === props.userInfo.first_name + " " + props.userInfo.last_name)[0].role && <ListItem
+					home && home.members && home.members.filter((memberObj) => memberObj.full_name === props.userInfo.first_name + " " + props.userInfo.last_name)[0]?.role && <ListItem
 						key={"home-setting"}
 						disablePadding
 						onClick={() => handleOpenHomeSetting()}
